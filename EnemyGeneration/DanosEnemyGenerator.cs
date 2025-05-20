@@ -7,7 +7,7 @@ namespace RepoRanked.EnemyGeneration
 {
     public static class DanosEnemyGenerator
     {
-        public static EnemySetup CreateCustomEnemySetup(Dictionary<string,int> enemyList)
+        public static EnemySetup CreateCustomEnemySetup(Dictionary<string, int> enemyList)
         {
             var director = EnemyDirector.instance;
             if (director.enemiesDifficulty1.Count == 0)
@@ -21,10 +21,10 @@ namespace RepoRanked.EnemyGeneration
 
 
 
-            
+
 
             template.name = "RepoRankedCustomEnemy";
-            template.spawnObjects = new List<GameObject>();         
+            template.spawnObjects = new List<GameObject>();
 
             //Loop through the dictionary, find the string and add the value as the amount
             foreach (KeyValuePair<string, int> kvp in enemyList)
@@ -87,7 +87,7 @@ namespace RepoRanked.EnemyGeneration
 
                 foreach (GameObject enemyObject in enemy.spawnObjects)
                 {
-                    if (enemyName.Contains("Director"))
+                    if (enemyName.Contains("Gnome Director"))
                     {
                         //Try get the EnemyGnomeDirector component
                         EnemyGnomeDirector enemyGnomeDirector = enemyObject.GetComponent<EnemyGnomeDirector>();
@@ -96,6 +96,10 @@ namespace RepoRanked.EnemyGeneration
                             RepoRanked.Logger.LogInfo($"Found enemy: {enemyObject.name}");
                             return enemyObject;
                         }
+                    }
+
+                    else if (enemyName.Contains("Bang Director"))
+                    {
 
                         //Try bang director
                         EnemyBangDirector enemyBangDirector = enemyObject.GetComponent<EnemyBangDirector>();
@@ -104,8 +108,11 @@ namespace RepoRanked.EnemyGeneration
                             RepoRanked.Logger.LogInfo($"Found enemy: {enemyObject.name}");
                             return enemyObject;
                         }
+                    }
 
 
+                    else if (enemyName.Contains("Director"))
+                    {
                         //Try it just by enemy.Name
                         if (enemyObject.name.Equals(enemyName, StringComparison.OrdinalIgnoreCase))
                         {
@@ -152,7 +159,7 @@ namespace RepoRanked.EnemyGeneration
 
             RepoRanked.Logger.LogWarning($"Enemy {enemyName} not found in the array.");
 
-           
+
             return null;
         }
     }

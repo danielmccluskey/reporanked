@@ -107,7 +107,7 @@ namespace RepoRanked.MainMenu
 
                         if (response.Status == "ok")
                         {
-                            ShowEloPopup(response.EloRating);
+                            ShowEloPopup(response.EloRating, response.Message);
                         }
                         else if (response.Status == "error")
                         {
@@ -218,7 +218,7 @@ namespace RepoRanked.MainMenu
 
         }
 
-        private void ShowEloPopup(int elo)
+        private void ShowEloPopup(int elo,string bracket)
         {
             if (eloPopupPage == null)
             {
@@ -232,7 +232,13 @@ namespace RepoRanked.MainMenu
 
                 eloPopupPage.AddElement(parent =>
                 {
-                    MenuAPI.CreateREPOLabel($"Elo Rating: {elo}", parent, new Vector2(400, 220));
+                    MenuAPI.CreateREPOLabel($"{bracket} ({elo})", parent, new Vector2(400, 220));
+                });
+                eloPopupPage.AddElement(parent =>
+                {
+                    var lab = MenuAPI.CreateREPOLabel($"Your rank:", parent, new Vector2(400, 235));
+                    lab.labelTMP.color = Color.white;
+                    lab.labelTMP.fontSize = 10;
                 });
                 eloPopupPage.AddElement(parent =>
                 {
