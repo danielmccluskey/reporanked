@@ -30,10 +30,13 @@ namespace RepoRanked.LevelGeneration
 
         public int Range(int min, int max) => rng.Next(min, max);
 
+        
+
 
         public static IEnumerator GenerateWithSeed(LevelGenerator instance, int seedBase)
         {
-            DanosLevelGenerator.Instance = new DanosLevelGenerator(seedBase);
+            DanosLevelGenerator.Create(seedBase);
+            DanosValuableGeneration.Create(seedBase);
 
 
 
@@ -121,7 +124,7 @@ namespace RepoRanked.LevelGeneration
                     instance.PhotonView.RPC("ItemSetup", RpcTarget.AllBuffered);
 
                 UnityEngine.Random.InitState(seedBase + 5);
-                instance.StartCoroutine(ValuableDirector.instance.SetupHost());
+                instance.StartCoroutine(DanosValuableGeneration.Instance.SetupHost(ValuableDirector.instance));
                 while (!ValuableDirector.instance.setupComplete)
                 {
                     instance.State = LevelState.Valuable;
