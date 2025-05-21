@@ -47,89 +47,92 @@ namespace RepoRanked.MainMenu
                     return;
                 }
 
-            
 
-            foreach (Transform child in parent)
-            {
 
-                switch (child.name)
+                foreach (Transform child in parent)
                 {
-                    case "Menu Button - host game":
-                        hostPosition = child.localPosition;
-                        Destroy(child.gameObject);
-                        break;
 
-                    case "Menu Button - join game":
-                        joinPosition = child.localPosition;
-                        Destroy(child.gameObject);
-                        break;
+                    switch (child.name)
+                    {
+                        case "Menu Button - host game":
+                            hostPosition = child.localPosition;
+                            Destroy(child.gameObject);
+                            break;
 
-                    case "Menu Button - singleplayer":
-                    case "Menu Button - Tutorial":
-                        Destroy(child.gameObject);
-                        break;
+                        case "Menu Button - join game":
+                            joinPosition = child.localPosition;
+                            Destroy(child.gameObject);
+                            break;
+
+                        case "Menu Button - singleplayer":
+                        case "Menu Button - Tutorial":
+                            Destroy(child.gameObject);
+                            break;
+                    }
                 }
-            }
 
-            var rankedButton = MenuAPI.CreateREPOButton(
-                "REPORanked",
-                async () =>
-                {
-                    if (isProcessing)
+                //create a label to the side of the rankedbutton
+                var label = MenuAPI.CreateREPOLabel("Hang tight! Buttons may take a second,\navoid clicking multiple times before it loads as it\nmay cause UI errors.", parent, new Vector2(hostPosition.x+160, hostPosition.y));
+                label.labelTMP.fontSize = 16;
+                var rankedButton = MenuAPI.CreateREPOButton(
+                    "REPORanked",
+                    async () =>
                     {
-                        return;
-                    }
-                    isProcessing = true;
-
-
-
-                    Debug.Log("REPORanked clicked!");
-                    DanosModChecker.Create();
-                    DanosModChecker.Instance.ForceCheck();
-
-
-                    if (DanosModChecker.Instance != null && !DanosModChecker.Instance.IsCompliant)
-                    {
-                       ShowErrorPopup("You are using disallowed mods. \nWe do this to keep competitive integrity.\n\nAllowed mods are:\n-REPORanked\n-MenuLib\n\n\nPlease remove any others to play :).");
-                       isProcessing = false;
-                       return;
-                    }
-
-
-                    var response = await DanosAPI.RegisterPlayer((long)SteamClient.SteamId.Value, SteamClient.Name);
-                    if (response != null)
-                    {
-
-
-                        Debug.Log($"Registered with Elo {response.EloRating}");
-
-
-
-                        if (response.Status == "ok")
+                        if (isProcessing)
                         {
-                            ShowEloPopup(response.EloRating, response.Message);
+                            return;
                         }
-                        else if (response.Status == "error")
+                        isProcessing = true;
+
+
+
+                        Debug.Log("REPORanked clicked!");
+                        DanosModChecker.Create();
+                        DanosModChecker.Instance.ForceCheck();
+
+
+                        if (DanosModChecker.Instance != null && !DanosModChecker.Instance.IsCompliant)
                         {
-                            ShowErrorPopup(response.Message);
+                            ShowErrorPopup("You are using disallowed mods. \nWe do this to keep competitive integrity.\n\nAllowed mods are:\n-REPORanked\n-MenuLib\n\n\nPlease remove any others to play :).");
+                            isProcessing = false;
+                            return;
                         }
-                        else
+
+
+                        ShowPrivacyConsentPopup(async () =>
                         {
-                            Debug.LogError("Unknown response status.");
-                        }
-                    }
+                            var response = await DanosAPI.RegisterPlayer((long)SteamClient.SteamId.Value, SteamClient.Name);
+                            if (response != null)
+                            {
+                                Debug.Log($"Registered with Elo {response.EloRating}");
+                                if (response.Status == "ok")
+                                {
+                                    ShowEloPopup(response.EloRating, response.Message);
+                                }
+                                else if (response.Status == "error")
+                                {
+                                    ShowErrorPopup(response.Message);
+                                }
+                                else
+                                {
+                                    Debug.LogError("Unknown response status.");
+                                }
+                            }
+                            else
+                            {
+                                Debug.LogError("Failed to register player.");
+                            }
 
-                    else
-                    {
-                        Debug.LogError("Failed to register player.");
+                            isProcessing = false;
+                        });
 
-                    }
 
-                    isProcessing = false;
-                },
-                parent,
-                localPosition: hostPosition
-            );
+
+                        isProcessing = false;
+                    },
+                    parent,
+                    localPosition: hostPosition
+                );
 
 
                 //Add a discord button that uses Application.OpenURL
@@ -170,7 +173,7 @@ namespace RepoRanked.MainMenu
                                 popup.AddElement(scrollParent =>
                                 {
                                     var header = $"Match #{response.MatchId}";
-                                    MenuAPI.CreateREPOLabel(header, scrollParent, new Vector2(400,260));
+                                    MenuAPI.CreateREPOLabel(header, scrollParent, new Vector2(400, 260));
                                 });
 
                                 int y = 220;
@@ -218,7 +221,7 @@ namespace RepoRanked.MainMenu
 
         }
 
-        private void ShowEloPopup(int elo,string bracket)
+        private void ShowEloPopup(int elo, string bracket)
         {
             if (eloPopupPage == null)
             {
@@ -242,7 +245,7 @@ namespace RepoRanked.MainMenu
                 });
                 eloPopupPage.AddElement(parent =>
                 {
-                    
+
 
                     MenuAPI.CreateREPOButton("Queue for Match", async () =>
                     {
@@ -276,11 +279,11 @@ namespace RepoRanked.MainMenu
                 });
 
 
-                
 
 
 
-                
+
+
             }
 
             eloPopupPage.OpenPage(false);
@@ -313,7 +316,50 @@ namespace RepoRanked.MainMenu
             return popup;
         }
 
+
+
+        private void ShowPrivacyConsentPopup(Action onAccept)
+        {
+            var popup = MenuAPI.CreateREPOPopupPage(
+                "Privacy Notice",
+                REPOPopupPage.PresetSide.Right,
+                shouldCachePage: false,
+                pageDimmerVisibility: true,
+                spacing: 1.5f
+            );
+
+            popup.AddElement(parent =>
+            {
+                var lab = MenuAPI.CreateREPOLabel(
+                    "To use REPORanked, we collect your SteamID and match data.\n" +
+                    "This is used solely for matchmaking, match tracking and\nElo calculations.\n\n" +
+                    "As this is still in development, we cannot offer data deletion\nmethods just yet.\n\n" +
+                    "By continuing, you consent to this data being collected\nand the above conditions regarding data management.",
+                    parent,
+                    new Vector2(400, 220)
+                );
+                lab.labelTMP.fontSize = 10;
+            });
+
+            popup.AddElement(parent =>
+            {
+                MenuAPI.CreateREPOButton("Accept", () =>
+                {
+                    onAccept.Invoke();
+                    popup.ClosePage(false);
+
+                }, parent, new Vector2(400, 140));
+
+                MenuAPI.CreateREPOButton("Decline", () =>
+                {
+                    popup.ClosePage(false);
+                }, parent, new Vector2(400, 100));
+            });
+
+            popup.OpenPage(false);
+        }
+
+
+
     }
-
-
 }
