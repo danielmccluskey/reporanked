@@ -13,7 +13,7 @@ namespace RepoRanked.Patches.EnemyDirectorP
     {
         static bool Prefix(EnemyDirector __instance)
         {
-            DifficultyAmountLogger.GenerateDifficultyAmountTable(__instance.amountCurve1, __instance.amountCurve2, __instance.amountCurve3);
+            //DifficultyAmountLogger.GenerateDifficultyAmountTable(__instance.amountCurve1, __instance.amountCurve2, __instance.amountCurve3);
 
             if (StatsManager.instance.teamName == "REPORanked")
             {
