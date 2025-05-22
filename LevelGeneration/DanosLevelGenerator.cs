@@ -9,7 +9,7 @@ using static LevelGenerator;
 
 namespace RepoRanked.LevelGeneration
 {
-    public class DanosLevelGenerator
+    public partial class DanosLevelGenerator
     {
         public static DanosLevelGenerator? Instance { get; private set; }
         private System.Random rng;
@@ -20,6 +20,7 @@ namespace RepoRanked.LevelGeneration
 
         public static void Create(int seed)
         {
+
             Instance = new DanosLevelGenerator(seed);
         }
 
@@ -35,8 +36,7 @@ namespace RepoRanked.LevelGeneration
 
         public static IEnumerator GenerateWithSeed(LevelGenerator instance, int seedBase)
         {
-            DanosLevelGenerator.Create(seedBase);
-            DanosValuableGeneration.Create(seedBase);
+            
 
 
 
@@ -76,7 +76,7 @@ namespace RepoRanked.LevelGeneration
                     yield return null;
 
                 UnityEngine.Random.InitState(seedBase + 3);
-                instance.StartCoroutine(instance.ModuleGeneration());
+                instance.StartCoroutine(DanosLevelGenerator.ModuleGeneration(instance));
                 while (instance.waitingForSubCoroutine)
                     yield return null;
 
@@ -365,6 +365,9 @@ namespace RepoRanked.LevelGeneration
             yield return null;
             instance.waitingForSubCoroutine = false;
         }
+
+
+
 
     }
 }
