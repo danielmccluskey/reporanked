@@ -97,7 +97,12 @@ namespace RepoRanked.MainMenu
                             isProcessing = false;
                             return;
                         }
-
+                        if (DanosModChecker.Instance != null && !DanosModChecker.Instance.IsGameVersionCompliant)
+                        {
+                            ShowErrorPopup("Your game version is not compliant with REPORanked.\n\nPlease update your game to the latest version.\n\nIf you are using the beta branch, please revert to the normal one.");
+                            isProcessing = false;
+                            return;
+                        }
 
                         ShowPrivacyConsentPopup(async () =>
                         {

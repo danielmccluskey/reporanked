@@ -26,6 +26,7 @@ namespace RepoRanked.Mods
         public float CheckIntervalSeconds = 10f;
 
         public bool IsCompliant { get; private set; } = true;
+        public bool IsGameVersionCompliant { get; private set; } = true;
 
         private void Awake()
         {
@@ -82,7 +83,45 @@ namespace RepoRanked.Mods
                 }
             }
 
+            RunGameVersionCheck();
+
+
+
+
         }
+
+        private void RunGameVersionCheck()
+        {
+            Version currentVersion = null;
+
+            BuildManager inst = BuildManager.instance;
+            if (inst != null)
+            {
+                currentVersion = inst.version;
+                if (currentVersion != null)
+                {
+
+                    if (currentVersion.title.ToLower().Contains("beta"))
+                    {
+                        IsGameVersionCompliant = false;
+                    }
+                    else
+                    {
+                        IsGameVersionCompliant = true;
+
+                    }
+
+
+                }
+            }
+
+
+        }
+
+
+
+
+
 
         public void ForceCheck()
         {
