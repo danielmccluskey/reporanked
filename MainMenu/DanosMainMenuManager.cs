@@ -112,7 +112,7 @@ namespace RepoRanked.MainMenu
                                 Debug.Log($"Registered with Elo {response.EloRating}");
                                 if (response.Status == "ok")
                                 {
-                                    ShowEloPopup(response.EloRating, response.Message);
+                                    ShowEloPopup(response.EloRating, response.Message, response.Matches);
                                 }
                                 else if (response.Status == "error")
                                 {
@@ -226,7 +226,7 @@ namespace RepoRanked.MainMenu
 
         }
 
-        private void ShowEloPopup(int elo, string bracket)
+        private void ShowEloPopup(int elo, string bracket, int matches)
         {
             if (eloPopupPage == null)
             {
@@ -237,7 +237,12 @@ namespace RepoRanked.MainMenu
                     pageDimmerVisibility: true,
                     spacing: 1.5f
                 );
-
+                eloPopupPage.AddElement(parent =>
+                {
+                    var lab = MenuAPI.CreateREPOLabel($"{matches} matches in the last 30 mins!", parent, new Vector2(400, 260));
+                    lab.labelTMP.color = Color.white;
+                    lab.labelTMP.fontSize = 10;
+                });
                 eloPopupPage.AddElement(parent =>
                 {
                     MenuAPI.CreateREPOLabel($"{bracket} ({elo})", parent, new Vector2(400, 220));
