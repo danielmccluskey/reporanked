@@ -93,7 +93,7 @@ namespace RepoRanked.EnemyGeneration
                         EnemyGnomeDirector enemyGnomeDirector = enemyObject.GetComponent<EnemyGnomeDirector>();
                         if (enemyGnomeDirector != null)
                         {
-                            RepoRanked.Logger.LogInfo($"Found enemy: {enemyObject.name}");
+                            //RepoRanked.Logger.LogInfo($"Found enemy: {enemyObject.name}");
                             return enemyObject;
                         }
                     }
@@ -105,7 +105,7 @@ namespace RepoRanked.EnemyGeneration
                         EnemyBangDirector enemyBangDirector = enemyObject.GetComponent<EnemyBangDirector>();
                         if (enemyBangDirector != null)
                         {
-                            RepoRanked.Logger.LogInfo($"Found enemy: {enemyObject.name}");
+                            //RepoRanked.Logger.LogInfo($"Found enemy: {enemyObject.name}");
                             return enemyObject;
                         }
                     }
@@ -116,7 +116,7 @@ namespace RepoRanked.EnemyGeneration
                         //Try it just by enemy.Name
                         if (enemyObject.name.Equals(enemyName, StringComparison.OrdinalIgnoreCase))
                         {
-                            RepoRanked.Logger.LogInfo($"Found enemy: {enemyObject.name}");
+                            //RepoRanked.Logger.LogInfo($"Found enemy: {enemyObject.name}");
                             return enemyObject;
                         }
 
@@ -130,14 +130,14 @@ namespace RepoRanked.EnemyGeneration
                     EnemyParent enemyParent = enemyObject.GetComponent<EnemyParent>();
                     if (enemyParent == null)
                     {
-                        RepoRanked.Logger.LogWarning($"EnemyParent component not found on {enemyObject.name}");
+                        //RepoRanked.Logger.LogWarning($"EnemyParent component not found on {enemyObject.name}");
                         continue;
                     }
                     //Check if the enemy name matches the given name
                     if (enemyParent != null && enemyParent.name.Equals(enemyName, StringComparison.OrdinalIgnoreCase))
                     {
                         //If the enemy is found, return it
-                        RepoRanked.Logger.LogInfo($"Found enemy: {enemyObject.name}");
+                        //RepoRanked.Logger.LogInfo($"Found enemy: {enemyObject.name}");
                         return enemyObject;
                     }
                     else
@@ -157,7 +157,7 @@ namespace RepoRanked.EnemyGeneration
 
             //If the enemy is not found, return null
 
-            RepoRanked.Logger.LogWarning($"Enemy {enemyName} not found in the array.");
+            //RepoRanked.Logger.LogWarning($"Enemy {enemyName} not found in the array.");
 
 
             return null;

@@ -12,7 +12,7 @@ namespace RepoRanked.LevelGeneration
     public partial class DanosLevelGenerator
     {
         public static DanosLevelGenerator? Instance { get; private set; }
-        private System.Random rng;
+        public System.Random rng;
         private DanosLevelGenerator(int seed)
         {
             rng = new System.Random(seed);
@@ -60,28 +60,23 @@ namespace RepoRanked.LevelGeneration
                 if (instance.DebugAmount > 0)
                     instance.ModuleAmount = instance.DebugAmount;
 
-                UnityEngine.Random.InitState(seedBase + 0);
                 instance.StartCoroutine(DanosLevelGenerator.TileGeneration(instance));
                 while (instance.waitingForSubCoroutine)
                     yield return null;
 
-                UnityEngine.Random.InitState(seedBase + 1);
                 instance.StartCoroutine(DanosLevelGenerator.StartRoomGeneration(instance));
                 while (instance.waitingForSubCoroutine)
                     yield return null;
 
-                UnityEngine.Random.InitState(seedBase + 2);
-                instance.StartCoroutine(instance.GenerateConnectObjects());
+                instance.StartCoroutine(DanosLevelGenerator.GenerateConnectObjects(instance));
                 while (instance.waitingForSubCoroutine)
                     yield return null;
 
-                UnityEngine.Random.InitState(seedBase + 3);
                 instance.StartCoroutine(DanosLevelGenerator.ModuleGeneration(instance));
                 while (instance.waitingForSubCoroutine)
                     yield return null;
 
-                UnityEngine.Random.InitState(seedBase + 4);
-                instance.StartCoroutine(instance.GenerateBlockObjects());
+                instance.StartCoroutine(DanosLevelGenerator.GenerateBlockObjects(instance));
                 while (instance.waitingForSubCoroutine)
                     yield return null;
 
@@ -363,6 +358,62 @@ namespace RepoRanked.LevelGeneration
             go.transform.parent = instance.LevelParent.transform;
 
             yield return null;
+            instance.waitingForSubCoroutine = false;
+        }
+
+        private static IEnumerator GenerateConnectObjects(LevelGenerator instance)
+        {
+            instance.waitingForSubCoroutine = true;
+            instance.State = LevelState.ConnectObjects;
+            float moduleWidth = ModuleWidth * TileSize;
+            for (int x = 0; x < instance.LevelWidth; x++)
+            {
+                for (int y = 0; y < instance.LevelHeight; y++)
+                {
+                    if (instance.LevelGrid[x, y].active)
+                    {
+                        if (instance.GridCheckActive(x, y + 1))
+                        {
+                            instance.LevelGrid[x, y].connections++;
+                        }
+                        if (instance.GridCheckActive(x, y - 1))
+                        {
+                            instance.LevelGrid[x, y].connections++;
+                        }
+                        if (instance.GridCheckActive(x + 1, y))
+                        {
+                            instance.LevelGrid[x, y].connections++;
+                        }
+                        if (instance.GridCheckActive(x - 1, y))
+                        {
+                            instance.LevelGrid[x, y].connections++;
+                        }
+                        float num = (float)x * moduleWidth - (float)(instance.LevelWidth / 2) * moduleWidth;
+                        float num2 = (float)y * moduleWidth + moduleWidth / 2f;
+                        if (y + 1 < instance.LevelHeight && instance.LevelGrid[x, y + 1].active && !instance.LevelGrid[x, y + 1].connectedBot)
+                        {
+                            instance.SpawnConnectObject(new Vector3(num, 0f, num2 + moduleWidth / 2f), Vector3.zero);
+                            instance.LevelGrid[x, y].connectedTop = true;
+                        }
+                        if (x + 1 < instance.LevelWidth && instance.LevelGrid[x + 1, y].active && !instance.LevelGrid[x + 1, y].connectedLeft)
+                        {
+                            instance.SpawnConnectObject(new Vector3(num + moduleWidth / 2f, 0f, num2), new Vector3(0f, 90f, 0f));
+                            instance.LevelGrid[x, y].connectedRight = true;
+                        }
+                        if ((y - 1 >= 0 && instance.LevelGrid[x, y - 1].active && !instance.LevelGrid[x, y - 1].connectedTop) || (x == instance.LevelWidth / 2 && y == 0))
+                        {
+                            instance.SpawnConnectObject(new Vector3(num, 0f, num2 - moduleWidth / 2f), Vector3.zero);
+                            instance.LevelGrid[x, y].connectedBot = true;
+                        }
+                        if (x - 1 >= 0 && instance.LevelGrid[x - 1, y].active && !instance.LevelGrid[x - 1, y].connectedRight)
+                        {
+                            instance.SpawnConnectObject(new Vector3(num - moduleWidth / 2f, 0f, num2), Vector3.zero);
+                            instance.LevelGrid[x, y].connectedLeft = true;
+                        }
+                        yield return null;
+                    }
+                }
+            }
             instance.waitingForSubCoroutine = false;
         }
 

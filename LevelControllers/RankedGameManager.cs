@@ -18,7 +18,7 @@ namespace RepoRanked.LevelControllers
         private Coroutine? pingCoroutine;
         public MatchmakingStatusResponse matchData;
         private long localSteamId;
-        private float pingInterval = 10f;
+        private float pingInterval = 3f;
 
         public static void StartMatch(MatchmakingStatusResponse matchInfo)
         {
