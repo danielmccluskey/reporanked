@@ -65,7 +65,7 @@ namespace RepoRanked.MainMenu
 
             while (true)
             {
-                yield return new WaitForSeconds(10f);
+                yield return new WaitForSeconds(4f);
 
                 // call the async method via a wrapper
                 var task = CheckMatchStatusAsync(steamId);

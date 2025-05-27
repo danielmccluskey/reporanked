@@ -14,7 +14,8 @@ namespace RepoRanked.Patches.EnemyDirectorP
         static bool Prefix(EnemyDirector __instance)
         {
             //DifficultyAmountLogger.GenerateDifficultyAmountTable(__instance.amountCurve1, __instance.amountCurve2, __instance.amountCurve3);
-
+            //EnemyExtractor.GenerateEnemiesFullJson(__instance);
+            //EnemyExtractor.GenerateEnemiesJson(__instance);
             if (StatsManager.instance.teamName == "REPORanked")
             {
                 if(RankedGameManager.Instance == null)
@@ -39,6 +40,9 @@ namespace RepoRanked.Patches.EnemyDirectorP
                     customEnemyLlist.Add(customGen);
                     EnemyDirector.instance.PickEnemies(customEnemyLlist);
                     EnemyDirector.instance.totalAmount = 1;
+
+
+
 
                     return false; // Skip original method
                 }
