@@ -84,19 +84,19 @@ namespace RepoRanked.LevelGeneration
             }
             List<ValuableVolume> list = UnityEngine.Object.FindObjectsOfType<ValuableVolume>(includeInactive: false).ToList();
             instance.tinyVolumes = list.FindAll((ValuableVolume x) => x.VolumeType == ValuableVolume.Type.Tiny);
-            instance.tinyVolumes.Shuffle();
+            instance.tinyVolumes.ShuffleWithRng(rng);
             instance.smallVolumes = list.FindAll((ValuableVolume x) => x.VolumeType == ValuableVolume.Type.Small);
-            instance.smallVolumes.Shuffle();
+            instance.smallVolumes.ShuffleWithRng(rng);
             instance.mediumVolumes = list.FindAll((ValuableVolume x) => x.VolumeType == ValuableVolume.Type.Medium);
-            instance.mediumVolumes.Shuffle();
+            instance.mediumVolumes.ShuffleWithRng(rng);
             instance.bigVolumes = list.FindAll((ValuableVolume x) => x.VolumeType == ValuableVolume.Type.Big);
-            instance.bigVolumes.Shuffle();
+            instance.bigVolumes.ShuffleWithRng(rng);
             instance.wideVolumes = list.FindAll((ValuableVolume x) => x.VolumeType == ValuableVolume.Type.Wide);
-            instance.wideVolumes.Shuffle();
+            instance.wideVolumes.ShuffleWithRng(rng);
             instance.tallVolumes = list.FindAll((ValuableVolume x) => x.VolumeType == ValuableVolume.Type.Tall);
-            instance.tallVolumes.Shuffle();
+            instance.tallVolumes.ShuffleWithRng(rng);
             instance.veryTallVolumes = list.FindAll((ValuableVolume x) => x.VolumeType == ValuableVolume.Type.VeryTall);
-            instance.veryTallVolumes.Shuffle();
+            instance.veryTallVolumes.ShuffleWithRng(rng);
             if (instance.valuableDebug == ValuableDebug.All)
             {
                 instance.totalMaxAmount = list.Count;

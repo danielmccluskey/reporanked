@@ -39,10 +39,7 @@
   </ItemGroup>
 
   <Target Name="PostBuildCopy" AfterTargets="Build">
-    <Copy
-      SourceFiles="$(OutputPath)$(AssemblyName).dll"
-      DestinationFolder="C:\Users\dmccl\Documents\reporanked\package"
-      OverwriteReadOnlyFiles="true" />
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="C:\Users\dmccl\Documents\reporanked\package" OverwriteReadOnlyFiles="true" />
   </Target>
 
 </Project>

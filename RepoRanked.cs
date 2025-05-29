@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace RepoRanked;
 
-[BepInPlugin("danos.RepoRanked", "RepoRanked", "0.9.7")]
+[BepInPlugin("danos.RepoRanked", "RepoRanked", "0.9.8")]
 [BepInDependency("nickklmao.menulib", BepInDependency.DependencyFlags.HardDependency)]
 
 public class RepoRanked : BaseUnityPlugin

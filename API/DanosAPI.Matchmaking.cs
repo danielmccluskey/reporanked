@@ -13,9 +13,9 @@ namespace RepoRanked.API
 
         
 
-        public static async Task<bool> Enqueue(long steamId)
+        public static async Task<bool> Enqueue(long steamId, QueueTypes queueTypes = QueueTypes.ranked, string passPhrase = "")
         {
-            var request = new EnqueueRequest { SteamId = steamId };
+            var request = new EnqueueRequest { SteamId = steamId, QueueTypes = queueTypes, PassPhrase = passPhrase };
 
             var result = await DanosAPIHandler.PostAsync<EnqueueRequest, EnqueueResponse>(
                 "matchmaking/enqueue", request

@@ -27,11 +27,11 @@ namespace RepoRanked.MainMenu
             Instance = obj.AddComponent<DanosMatchQueuePoller>();
         }
 
-        public void StartPolling()
+        public void StartPolling(REPOPopupPage? pageToClose)
         {
             if (pollingCoroutine != null) return;
 
-            DanosMainMenuManager.Instance?.eloPopupPage.ClosePage(true);
+            pageToClose?.ClosePage(true);
             var queuePosition = new Vector2(400, 80);
             queuePage = MenuAPI.CreateREPOPopupPage("Searching for Match...", REPOPopupPage.PresetSide.Right, false, true, 1.5f);
             queuePage.AddElement(parent =>
