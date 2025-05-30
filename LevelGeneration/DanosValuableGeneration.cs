@@ -9,7 +9,7 @@ using static ValuableDirector;
 
 namespace RepoRanked.LevelGeneration
 {
-    public class DanosValuableGeneration
+    public partial class DanosValuableGeneration
     {
         public static DanosValuableGeneration? Instance { get; private set; }
         private System.Random rng;
@@ -29,22 +29,7 @@ namespace RepoRanked.LevelGeneration
         }
 
         public int Range(int min, int max) => rng.Next(min, max);
-        public void DollarValueSetLogic(ValuableObject valuableInstance)
-        {
-            if (valuableInstance.dollarValueOverride != 0)
-            {
-                valuableInstance.dollarValueOriginal = valuableInstance.dollarValueOverride;
-                valuableInstance.dollarValueCurrent = valuableInstance.dollarValueOverride;
-            }
-            else
-            {
-                valuableInstance.dollarValueOriginal = Mathf.Round(rng.Next((int)valuableInstance.valuePreset.valueMin, (int)valuableInstance.valuePreset.valueMax));
-                valuableInstance.dollarValueOriginal = Mathf.Round(valuableInstance.dollarValueOriginal / 100f) * 100f;
-                valuableInstance.dollarValueCurrent = valuableInstance.dollarValueOriginal;
-            }
-            valuableInstance.dollarValueSet = true;
-
-        }
+        
 
         public IEnumerator SetupHost(ValuableDirector instance)
         {
