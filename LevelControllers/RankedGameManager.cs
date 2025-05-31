@@ -127,6 +127,8 @@ namespace RepoRanked.LevelControllers
                 StopCoroutine(pingCoroutine);
             if (matchTimeCoroutine != null)
                 StopCoroutine(matchTimeCoroutine);
+            pingCoroutine = null;
+            matchTimeCoroutine = null;
 
             //PlayerAvatar.instance.playerHealth.health = 0;
             //PlayerAvatar.instance.playerHealth.Hurt(1, savingGrace: false);
@@ -157,6 +159,19 @@ namespace RepoRanked.LevelControllers
             int completed = RoundDirector.instance != null ? RoundDirector.instance.extractionPointsCompleted : 0;
 
             return completed;
+        }
+
+        public void FinishDeath()
+        {
+            StartCoroutine(IEFinishDeath());
+        }
+
+        IEnumerator IEFinishDeath()
+        {
+            yield return new WaitForSeconds(1);
+            if (pingCoroutine == null)
+                yield break;
+            CompleteMatch("dead");
         }
     }
 }
