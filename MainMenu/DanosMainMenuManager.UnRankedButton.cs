@@ -77,7 +77,7 @@ namespace RepoRanked.MainMenu
                         isProcessing = false;
                     },
                     parent,
-                    localPosition: hostPosition + new Vector2(200, -120)
+                    localPosition: hostPosition + new Vector2(150, 0)
                 );
 
             return rankedButton;

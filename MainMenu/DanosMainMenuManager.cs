@@ -6,7 +6,9 @@ using RepoRanked.Mods;
 using Steamworks;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -15,6 +17,8 @@ namespace RepoRanked.MainMenu
     public partial class DanosMainMenuManager : MonoBehaviour
     {
         public static DanosMainMenuManager Instance { get; private set; } = null!;
+
+        public static bool SpawnedButtonWarning = false;
         
         Vector2 hostPosition = Vector2.zero;
         Vector2 joinPosition = Vector2.zero;
@@ -50,9 +54,10 @@ namespace RepoRanked.MainMenu
 
                 RemoveMainButtons(parent);
 
-                //create a label to the side of the rankedbutton
-                var label = MenuAPI.CreateREPOLabel("Hang tight! Buttons may take a second,\navoid clicking multiple times before it loads as it\nmay cause UI errors.", parent, new Vector2(hostPosition.x+160, hostPosition.y));
-                label.labelTMP.fontSize = 16;
+                // popup to explain the buttons a bit
+                if (!SpawnedButtonWarning) // Avoid opening the menu more than once each time you open the game
+                    MenuManager.instance.PagePopUpScheduled("RepoRankeds buttons warning", Color.yellow, "To avoid possible bugs, please be patient when pressing a button. Depending on your network, when you press a button, the menu could dissapear for some time. Avoid opening menus again without waiting at least one second.", "Let me play...");
+                SpawnedButtonWarning = true;
 
                 var rankedbutton = GetRankedButton(parent);
                 var discordButton = GetDiscordButton(parent);
@@ -60,6 +65,8 @@ namespace RepoRanked.MainMenu
                 if (RankedGameManager.LastMatchId != -1)
                 {
                     var lastMatchButton = GetLastMatchButton(parent);
+                    _ = RunLastMatchCheckAsync();
+                    
                 }
                 var unrankedButton = GetUnRankedButton(parent);
                 var passButton = GetPassphraseButton(parent);
@@ -68,7 +75,32 @@ namespace RepoRanked.MainMenu
 
         }
 
-        
+        private async Task RunLastMatchCheckAsync() // Get the results for the popup
+        {
+            var matchId = RankedGameManager.LastMatchId;
+            var response = await DanosAPI.GetMatchResults(matchId);
+            if (response == null)
+                return;
+
+            string playerResults = "";
+            foreach (var player in response.Players)
+            {
+                var steamId = player.Key;
+                var name = player.Value;
+                var result = response.Results.ContainsKey(steamId) ? response.Results[steamId] : "unknown";
+                var eloChange = response.EloChanges.ContainsKey(steamId)
+                    ? response.EloChanges[steamId] - 0
+                    : 0;
+
+                string display = $"{name} - {result}, Elo Δ: {eloChange}";
+                playerResults = playerResults + "\n" + display;
+            }
+
+            MenuManager.instance.PagePopUpScheduled($"Match results ({response.MatchId})", (response.WinnerSteamId == (long)SteamClient.SteamId.Value) ? Color.green : Color.red, $"Elo Δ changed: {response.EloChanges[(long)SteamClient.SteamId.Value]}\n{playerResults}", "GG");
+        }
+
+
+
 
         private REPOPopupPage ShowErrorPopup(string message)
         {
