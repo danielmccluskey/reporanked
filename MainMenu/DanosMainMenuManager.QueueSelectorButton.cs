@@ -14,19 +14,16 @@ namespace RepoRanked.MainMenu
     {
 
 
-        public REPOButton GetPassphraseButton(Transform parent)
+        public REPOButton GetQueueSelectorButton(Transform parent)
         {
             var discordButton = MenuAPI.CreateREPOButton(
-                "Set Unranked Passphrase",
+                "REPORanked",
                 () =>
                 {
-                    if (isProcessing) return;
-                    isProcessing = true;
-                    ShowPassphrasePopup();
-                    isProcessing = false;
+                    ShowQueueSelectorPopup();
                 },
                 parent,
-                localPosition: new Vector2(400, 140)
+                localPosition: hostPosition
             );
 
             return discordButton;

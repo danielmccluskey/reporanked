@@ -17,6 +17,9 @@ namespace RepoRanked.MainMenu
         {
             if (unRankedPopupPage == null)
             {
+                queueSelectorPopup?.ClosePage(true);
+
+
                 unRankedPopupPage = MenuAPI.CreateREPOPopupPage(
                     "REPORanked",
                     REPOPopupPage.PresetSide.Right,
@@ -57,10 +60,13 @@ namespace RepoRanked.MainMenu
 
 
                 });
-
+                unRankedPopupPage.AddElement(parent =>
+                {
+                    var passbutton = GetPassphraseButton(parent);
+                });
                 unRankedPopupPage.AddElement(parent =>
             {
-                MenuAPI.CreateREPOButton("Close", () => unRankedPopupPage.ClosePage(true), parent, new Vector2(400, 140));
+                MenuAPI.CreateREPOButton("Close", () => unRankedPopupPage.ClosePage(true), parent, new Vector2(400, 100));
             });
 
 

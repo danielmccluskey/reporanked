@@ -16,6 +16,8 @@ namespace RepoRanked.MainMenu
         {
             if (passphrasePopup == null)
             {
+                queueSelectorPopup?.ClosePage(true);
+                unRankedPopupPage?.ClosePage(true);
                 passphrasePopup = MenuAPI.CreateREPOPopupPage(
                     "Set Passphrase",
                     REPOPopupPage.PresetSide.Right,
