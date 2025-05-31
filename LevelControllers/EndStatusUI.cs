@@ -85,20 +85,20 @@ namespace RepoRanked.LevelControllers
 
         public IEnumerator IEEndMatchAnimation()
         {
-            matchEndedText.fontSize = 150;
+            matchEndedText.fontSize = 200;
             matchEndedText.text = "MATCH ENDED";
             matchEndedText.color = Color.white;
-            while (matchEndedText.fontSize > 100.1f)
+            while (matchEndedText.fontSize > 150.1f)
             {
                 yield return new WaitForEndOfFrame();
-                matchEndedText.fontSize = matchEndedText.fontSize - (matchEndedText.fontSize - 100) / 20;
+                matchEndedText.fontSize = matchEndedText.fontSize - (matchEndedText.fontSize - 150) / 20;
                 matchEndedText.color = matchEndedText.color - (matchEndedText.color - GetColor()) / 50;
             }
             yield return new WaitForSeconds(3);
             while (matchEndedText.color.a > 0.01f)
             {
                 yield return new WaitForEndOfFrame();
-                matchEndedText.fontSize = matchEndedText.fontSize - (matchEndedText.fontSize - 80) / 20;
+                matchEndedText.fontSize = matchEndedText.fontSize - (matchEndedText.fontSize - 100) / 20;
                 matchEndedText.color = matchEndedText.color - (matchEndedText.color - new Color(GetColor().r, GetColor().g, GetColor().b, 0) ) / 50;
             }
             matchEndedText.color = new Color(0, 0, 0, 0);

@@ -58,8 +58,6 @@ namespace RepoRanked.MainMenu
                                         var lab = MenuAPI.CreateREPOLabel(display, scrollParent, new Vector2(400, y));
 
                                         lab.labelTMP.fontSize = 10;
-
-                                        fontAsset = lab.labelTMP.font;
                                         y -= 30;
                                     });
                                 }

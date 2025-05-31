@@ -56,7 +56,7 @@ namespace RepoRanked.MainMenu
 
                 // popup to explain the buttons a bit
                 if (!SpawnedButtonWarning) // Avoid opening the menu more than once each time you open the game
-                    MenuManager.instance.PagePopUpScheduled("RepoRankeds buttons warning", Color.yellow, "To avoid possible bugs, please be patient when pressing a button. Depending on your network, when you press a button, the menu could dissapear for some time. Avoid opening menus again without waiting at least one second.", "Let me play...");
+                    MenuManager.instance.PagePopUpScheduled("RepoRanked buttons warning", Color.yellow, "To avoid possible bugs, please be patient when pressing a button. Depending on your network, when you press a button, the menu could dissapear for some time. Avoid opening menus again without waiting at least one second.", "Let me play...");
                 SpawnedButtonWarning = true;
 
                 var rankedbutton = GetRankedButton(parent);
