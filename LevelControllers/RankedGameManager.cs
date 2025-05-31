@@ -42,6 +42,7 @@ namespace RepoRanked.LevelControllers
 
             Debug.Log($"[REPORanked] Starting match {matchInfo.MatchId} with seed: {matchInfo.Seed}");
             OpponentStatusUI.CreateUI();
+            EndStatusUI.CreateUI();
             // Find the opponent
             foreach (var kvp in matchInfo.Players)
             {
@@ -115,6 +116,7 @@ namespace RepoRanked.LevelControllers
 
 
             OpponentStatusUI.Instance?.DestroyUI();
+            EndStatusUI.Instance?.EndMatchAnimation();
 
             foreach (PlayerAvatar player in GameDirector.instance.PlayerList)
             {
@@ -124,8 +126,6 @@ namespace RepoRanked.LevelControllers
 
             Destroy(gameObject);
             Instance = null;
-
-
         }
 
         private int GetCurrentProgress()

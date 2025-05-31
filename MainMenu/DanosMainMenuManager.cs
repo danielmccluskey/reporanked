@@ -96,7 +96,7 @@ namespace RepoRanked.MainMenu
                 playerResults = playerResults + "\n" + display;
             }
 
-            MenuManager.instance.PagePopUpScheduled($"Match results ({response.MatchId})", (response.WinnerSteamId == (long)SteamClient.SteamId.Value) ? Color.green : Color.red, $"Elo Δ changed: {response.EloChanges[(long)SteamClient.SteamId.Value]}\n{playerResults}", "GG");
+            MenuManager.instance.PagePopUpScheduled($"{((response.WinnerSteamId == (long)SteamClient.SteamId.Value) ? "WON" : "LOST")} MATCH #{response.MatchId}", (response.WinnerSteamId == (long)SteamClient.SteamId.Value) ? Color.green : Color.red, $"Elo Δ changed: {response.EloChanges[(long)SteamClient.SteamId.Value]}\n{playerResults}", "GG");
         }
 
 
