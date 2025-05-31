@@ -17,7 +17,7 @@ namespace RepoRanked.MainMenu
         public REPOButton GetUnRankedButton(Transform parent)
         {
             var rankedButton = MenuAPI.CreateREPOButton(
-                    "REPOUnRanked",
+                    "Un-Ranked",
                     async () =>
                     {
                         if (isProcessing)
@@ -26,6 +26,7 @@ namespace RepoRanked.MainMenu
                         }
                         isProcessing = true;
 
+                        queueSelectorPopup?.ClosePage(true);
 
 
                         Debug.Log("REPORanked clicked!");
@@ -77,7 +78,7 @@ namespace RepoRanked.MainMenu
                         isProcessing = false;
                     },
                     parent,
-                    localPosition: hostPosition + new Vector2(150, 0)
+                    localPosition: new Vector2(380, 200)
                 );
 
             return rankedButton;
