@@ -20,6 +20,8 @@ namespace RepoRanked.LevelControllers
         private TextMeshProUGUI nameText;
         private TextMeshProUGUI progressText;
 
+        private string LastProgressText = ""; // This is used to detect when progressText has changed to trigger the animation
+
         private void Awake()
         {
             if (Instance != null)
@@ -64,20 +66,20 @@ namespace RepoRanked.LevelControllers
             var nameObj = new GameObject("Name", typeof(TextMeshProUGUI));
             nameObj.transform.SetParent(parent);
             nameText = nameObj.GetComponent<TextMeshProUGUI>();
-            nameText.fontSize = 22;
-            nameText.alignment = TextAlignmentOptions.Left;
-            nameText.rectTransform.anchoredPosition = new Vector2(-50, 0);
-            nameText.rectTransform.sizeDelta = new Vector2(200, 30);          
+            nameText.fontSize = 30;
+            nameText.alignment = TextAlignmentOptions.Center;
+            nameText.rectTransform.anchoredPosition = new Vector2(0, 0);
+            nameText.rectTransform.sizeDelta = new Vector2(500, 30);          
             
 
 
             var progressObj = new GameObject("Progress", typeof(TextMeshProUGUI));
             progressObj.transform.SetParent(parent);
             progressText = progressObj.GetComponent<TextMeshProUGUI>();
-            progressText.fontSize = 20;
-            progressText.alignment = TextAlignmentOptions.Left;
-            progressText.rectTransform.anchoredPosition = new Vector2(-50, -30);
-            progressText.rectTransform.sizeDelta = new Vector2(200, 30);
+            progressText.fontSize = 25;
+            progressText.alignment = TextAlignmentOptions.Center;
+            progressText.rectTransform.anchoredPosition = new Vector2(0, -50);
+            progressText.rectTransform.sizeDelta = new Vector2(500, 30);
 
 
 
@@ -95,11 +97,6 @@ namespace RepoRanked.LevelControllers
             // Set the color to white
             nameText.color = GetColor();
             progressText.color = GetColor();
-
-
-
-
-
         }
 
         public Color GetColor()
@@ -135,17 +132,53 @@ namespace RepoRanked.LevelControllers
 
         public string GetText(int progress, int extractions)
         {
+            string result = "";
             if(progress == 0 && extractions == 0)
             {
-                return "Connecting...";
+                result = "...";
             }
-
-            if (progress >=extractions)
+            else if (progress >= extractions)
             {
-                return "Heading back to truck.";
+                result = "Heading back to truck.";
+            }
+            else
+            {
+                result = $"{progress}/{extractions} extracts";
             }
 
-            return $"{progress}/{extractions}";
+            if (result != LastProgressText) // Detect text change
+            {
+                progressText.rectTransform.anchoredPosition = new Vector2(0, -60);
+                progressText.fontSize = 50;
+                progressText.color = Color.white;
+                StartCoroutine(TextUpdate());
+            }
+
+            LastProgressText = result;
+            return result;
+        }
+
+        public IEnumerator TextUpdate()
+        {
+            while (progressText.fontSize >= 25.3f) // Initial flash when change
+            {
+                yield return new WaitForEndOfFrame();
+                progressText.fontSize = progressText.fontSize - (progressText.fontSize - 25f) / 30f;
+                progressText.color = progressText.color - (progressText.color - this.GetColor()) / 30f;
+                progressText.rectTransform.anchoredPosition = new Vector2(0f, progressText.rectTransform.anchoredPosition.y - (progressText.rectTransform.anchoredPosition.y - -50f) / 30f);
+            }
+
+            yield return new WaitForSeconds(2f);
+
+            while (this.progressText.fontSize >= 20.1f) // Melt with background
+            {
+                yield return new WaitForEndOfFrame();
+                progressText.fontSize = progressText.fontSize - (progressText.fontSize - 20f) / 50f;
+                progressText.color = progressText.color - (progressText.color - new Color(GetColor().r, GetColor().g, GetColor().b, 0.3f)) / 50f;
+                progressText.rectTransform.anchoredPosition = new Vector2(0f, progressText.rectTransform.anchoredPosition.y - (progressText.rectTransform.anchoredPosition.y - -40f) / 50f);
+            }
+
+            yield break;
         }
     }
 }

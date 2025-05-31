@@ -26,7 +26,7 @@ namespace RepoRanked.MainMenu
                     isProcessing = false;
                 },
                 parent,
-                localPosition: hostPosition + new Vector2(200, -160) // place below the main button
+                localPosition: hostPosition + new Vector2(150, -40) // place below the unrakeds button
             );
 
             return discordButton;
