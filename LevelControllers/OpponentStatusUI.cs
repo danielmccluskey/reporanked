@@ -66,7 +66,7 @@ namespace RepoRanked.LevelControllers
             var nameObj = new GameObject("Name", typeof(TextMeshProUGUI));
             nameObj.transform.SetParent(parent);
             nameText = nameObj.GetComponent<TextMeshProUGUI>();
-            nameText.fontSize = 30;
+            nameText.fontSize = 45;
             nameText.alignment = TextAlignmentOptions.Center;
             nameText.rectTransform.anchoredPosition = new Vector2(0, 0);
             nameText.rectTransform.sizeDelta = new Vector2(500, 30);          
@@ -76,7 +76,7 @@ namespace RepoRanked.LevelControllers
             var progressObj = new GameObject("Progress", typeof(TextMeshProUGUI));
             progressObj.transform.SetParent(parent);
             progressText = progressObj.GetComponent<TextMeshProUGUI>();
-            progressText.fontSize = 25;
+            progressText.fontSize = 30;
             progressText.alignment = TextAlignmentOptions.Center;
             progressText.rectTransform.anchoredPosition = new Vector2(0, -50);
             progressText.rectTransform.sizeDelta = new Vector2(500, 30);
@@ -149,7 +149,7 @@ namespace RepoRanked.LevelControllers
             if (result != LastProgressText) // Detect text change
             {
                 progressText.rectTransform.anchoredPosition = new Vector2(0, -60);
-                progressText.fontSize = 50;
+                progressText.fontSize = 75;
                 progressText.color = Color.white;
                 StartCoroutine(TextUpdate());
             }
@@ -160,20 +160,20 @@ namespace RepoRanked.LevelControllers
 
         public IEnumerator TextUpdate()
         {
-            while (progressText.fontSize >= 25.3f) // Initial flash when change
+            while (progressText.fontSize >= 35.3f) // Initial flash when change
             {
                 yield return new WaitForEndOfFrame();
-                progressText.fontSize = progressText.fontSize - (progressText.fontSize - 25f) / 30f;
+                progressText.fontSize = progressText.fontSize - (progressText.fontSize - 35) / 30f;
                 progressText.color = progressText.color - (progressText.color - this.GetColor()) / 30f;
                 progressText.rectTransform.anchoredPosition = new Vector2(0f, progressText.rectTransform.anchoredPosition.y - (progressText.rectTransform.anchoredPosition.y - -50f) / 30f);
             }
 
             yield return new WaitForSeconds(2f);
 
-            while (this.progressText.fontSize >= 20.1f) // Melt with background
+            while (this.progressText.fontSize >= 30.1f) // Melt with background
             {
                 yield return new WaitForEndOfFrame();
-                progressText.fontSize = progressText.fontSize - (progressText.fontSize - 20f) / 50f;
+                progressText.fontSize = progressText.fontSize - (progressText.fontSize - 30f) / 50f;
                 progressText.color = progressText.color - (progressText.color - new Color(GetColor().r, GetColor().g, GetColor().b, 0.3f)) / 50f;
                 progressText.rectTransform.anchoredPosition = new Vector2(0f, progressText.rectTransform.anchoredPosition.y - (progressText.rectTransform.anchoredPosition.y - -40f) / 50f);
             }

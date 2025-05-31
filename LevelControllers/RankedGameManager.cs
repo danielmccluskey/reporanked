@@ -15,10 +15,12 @@ namespace RepoRanked.LevelControllers
         public static RankedGameManager Instance { get; private set; } = null!;
 
         public static long LastMatchId { get; private set; } = -1;
-        private Coroutine? pingCoroutine;
+        private Coroutine? pingCoroutine, matchTimeCoroutine;
         public MatchmakingStatusResponse matchData;
         private long localSteamId;
         private float pingInterval = 3f;
+        public static float matchTime = 0f;
+        private float startMatchTime = 0f;
 
         public static void StartMatch(MatchmakingStatusResponse matchInfo)
         {
@@ -42,6 +44,7 @@ namespace RepoRanked.LevelControllers
 
             Debug.Log($"[REPORanked] Starting match {matchInfo.MatchId} with seed: {matchInfo.Seed}");
             OpponentStatusUI.CreateUI();
+            EndStatusUI.CreateUI();
             // Find the opponent
             foreach (var kvp in matchInfo.Players)
             {
@@ -59,6 +62,8 @@ namespace RepoRanked.LevelControllers
             // Begin periodic ping
             pingCoroutine = StartCoroutine(PingLoop());
 
+            // Begin match stats
+            matchTimeCoroutine = StartCoroutine(MatchTimeLoop());
         }
         
 
@@ -68,6 +73,17 @@ namespace RepoRanked.LevelControllers
             {
                 yield return new WaitForSeconds(pingInterval);
                 _ = PingMatch();
+            }
+        }
+
+        private IEnumerator MatchTimeLoop()
+        {
+            startMatchTime = Time.time;
+            matchTime = 0;
+            while (true)
+            {
+                yield return new WaitForEndOfFrame(); // it shouldn't be a problem to do this every frame since it would be like an Update void
+                matchTime = Time.time - startMatchTime;
             }
         }
 
@@ -109,12 +125,17 @@ namespace RepoRanked.LevelControllers
         {
             if (pingCoroutine != null)
                 StopCoroutine(pingCoroutine);
+            if (matchTimeCoroutine != null)
+                StopCoroutine(matchTimeCoroutine);
+            pingCoroutine = null;
+            matchTimeCoroutine = null;
 
             //PlayerAvatar.instance.playerHealth.health = 0;
             //PlayerAvatar.instance.playerHealth.Hurt(1, savingGrace: false);
 
 
             OpponentStatusUI.Instance?.DestroyUI();
+            EndStatusUI.Instance?.EndMatchAnimation();
 
             foreach (PlayerAvatar player in GameDirector.instance.PlayerList)
             {
@@ -124,8 +145,6 @@ namespace RepoRanked.LevelControllers
 
             Destroy(gameObject);
             Instance = null;
-
-
         }
 
         private int GetCurrentProgress()
@@ -140,6 +159,19 @@ namespace RepoRanked.LevelControllers
             int completed = RoundDirector.instance != null ? RoundDirector.instance.extractionPointsCompleted : 0;
 
             return completed;
+        }
+
+        public void FinishDeath()
+        {
+            StartCoroutine(IEFinishDeath());
+        }
+
+        IEnumerator IEFinishDeath()
+        {
+            yield return new WaitForSeconds(1);
+            if (pingCoroutine == null)
+                yield break;
+            CompleteMatch("dead");
         }
     }
 }
