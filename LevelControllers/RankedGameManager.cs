@@ -15,10 +15,12 @@ namespace RepoRanked.LevelControllers
         public static RankedGameManager Instance { get; private set; } = null!;
 
         public static long LastMatchId { get; private set; } = -1;
-        private Coroutine? pingCoroutine;
+        private Coroutine? pingCoroutine, matchTimeCoroutine;
         public MatchmakingStatusResponse matchData;
         private long localSteamId;
         private float pingInterval = 3f;
+        public static float matchTime = 0f;
+        private float startMatchTime = 0f;
 
         public static void StartMatch(MatchmakingStatusResponse matchInfo)
         {
@@ -60,6 +62,8 @@ namespace RepoRanked.LevelControllers
             // Begin periodic ping
             pingCoroutine = StartCoroutine(PingLoop());
 
+            // Begin match stats
+            matchTimeCoroutine = StartCoroutine(MatchTimeLoop());
         }
         
 
@@ -69,6 +73,17 @@ namespace RepoRanked.LevelControllers
             {
                 yield return new WaitForSeconds(pingInterval);
                 _ = PingMatch();
+            }
+        }
+
+        private IEnumerator MatchTimeLoop()
+        {
+            startMatchTime = Time.time;
+            matchTime = 0;
+            while (true)
+            {
+                yield return new WaitForEndOfFrame(); // it shouldn't be a problem to do this every frame since it would be like an Update void
+                matchTime = Time.time - startMatchTime;
             }
         }
 
@@ -110,6 +125,8 @@ namespace RepoRanked.LevelControllers
         {
             if (pingCoroutine != null)
                 StopCoroutine(pingCoroutine);
+            if (matchTimeCoroutine != null)
+                StopCoroutine(matchTimeCoroutine);
 
             //PlayerAvatar.instance.playerHealth.health = 0;
             //PlayerAvatar.instance.playerHealth.Hurt(1, savingGrace: false);

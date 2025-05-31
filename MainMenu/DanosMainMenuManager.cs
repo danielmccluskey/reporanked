@@ -95,7 +95,13 @@ namespace RepoRanked.MainMenu
                 playerResults = playerResults + "\n" + display;
             }
 
-            MenuManager.instance.PagePopUpScheduled($"{((response.WinnerSteamId == (long)SteamClient.SteamId.Value) ? "WON" : "LOST")} MATCH #{response.MatchId}", (response.WinnerSteamId == (long)SteamClient.SteamId.Value) ? Color.green : Color.red, $"Elo Δ changed: {response.EloChanges[(long)SteamClient.SteamId.Value]}\n{playerResults}", "GG");
+            TimeSpan time = TimeSpan.FromSeconds(RankedGameManager.matchTime);
+            string formattedTime = string.Format("{0:D2}:{1:D2}.{2:D3}", time.Minutes, time.Seconds, time.Milliseconds);
+
+            MenuManager.instance.PagePopUpScheduled($"{((response.WinnerSteamId == (long)SteamClient.SteamId.Value) ? "WON" : "LOST")} MATCH #{response.MatchId}", 
+                (response.WinnerSteamId == (long)SteamClient.SteamId.Value) ? Color.green : Color.red, $"Elo Δ changed: {response.EloChanges[(long)SteamClient.SteamId.Value]}\n{playerResults}" +
+                $"\n\n-STATS-\nTime: {formattedTime}", 
+                "OK");
         }
 
 
