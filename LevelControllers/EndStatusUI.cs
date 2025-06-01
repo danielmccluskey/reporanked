@@ -85,20 +85,28 @@ namespace RepoRanked.LevelControllers
 
         public IEnumerator IEEndMatchAnimation()
         {
-            matchEndedText.fontSize = 200;
+            matchEndedText.fontSize = 300;
             matchEndedText.text = "MATCH ENDED";
             matchEndedText.color = Color.white;
-            while (matchEndedText.fontSize > 150.1f)
+            matchEndedText.enableVertexGradient = true;
+            Color w = Color.white;
+            Color w2 = Color.white;
+            matchEndedText.colorGradient = new VertexGradient(w,w,w2,w2);
+            while (matchEndedText.fontSize > 200.1f)
             {
                 yield return new WaitForEndOfFrame();
-                matchEndedText.fontSize = matchEndedText.fontSize - (matchEndedText.fontSize - 150) / 20;
-                matchEndedText.color = matchEndedText.color - (matchEndedText.color - GetColor()) / 50;
+                matchEndedText.fontSize = matchEndedText.fontSize - (matchEndedText.fontSize - 200) / 30;
+                w = w - (w - GetColor()) / 40;
+                w2 = w2 - (w2 - GetColor()) / 30;
+                matchEndedText.colorGradient = new VertexGradient(w, w, w2, w2);
             }
             yield return new WaitForSeconds(3);
+            matchEndedText.enableVertexGradient = false;
+            matchEndedText.color = GetColor();
             while (matchEndedText.color.a > 0.01f)
             {
                 yield return new WaitForEndOfFrame();
-                matchEndedText.fontSize = matchEndedText.fontSize - (matchEndedText.fontSize - 100) / 20;
+                matchEndedText.fontSize = matchEndedText.fontSize - (matchEndedText.fontSize - 100) / 100;
                 matchEndedText.color = matchEndedText.color - (matchEndedText.color - new Color(GetColor().r, GetColor().g, GetColor().b, 0) ) / 50;
             }
             matchEndedText.color = new Color(0, 0, 0, 0);
