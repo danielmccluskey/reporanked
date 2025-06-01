@@ -66,7 +66,7 @@ namespace RepoRanked.MainMenu
                 });
                 unRankedPopupPage.AddElement(parent =>
             {
-                MenuAPI.CreateREPOButton("Close", () => unRankedPopupPage.ClosePage(true), parent, new Vector2(400, 100));
+                MenuAPI.CreateREPOButton("Close", () => { unRankedPopupPage.ClosePage(true); Destroy(unRankedPopupPage); }, parent, new Vector2(400, 100));
             });
 
 

@@ -128,7 +128,7 @@ namespace RepoRanked.MainMenu
 
             popup.AddElement(parent =>
             {
-                MenuAPI.CreateREPOButton("Close", () => popup.ClosePage(false), parent, new Vector2(400, 100));
+                MenuAPI.CreateREPOButton("Close", () => { popup.ClosePage(true); Destroy(popup); }, parent, new Vector2(400, 100));
             });
 
             popup.OpenPage(false);
@@ -167,14 +167,15 @@ namespace RepoRanked.MainMenu
             {
                 MenuAPI.CreateREPOButton("Accept", () =>
                 {
+                    popup.ClosePage(true);
+                    Destroy(popup);
                     onAccept.Invoke();
-                    popup.ClosePage(false);
-
                 }, parent, new Vector2(400, 140));
 
                 MenuAPI.CreateREPOButton("Decline", () =>
                 {
-                    popup.ClosePage(false);
+                    popup.ClosePage(true);
+                    Destroy(popup);
                 }, parent, new Vector2(400, 100));
             });
 

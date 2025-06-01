@@ -64,7 +64,7 @@ namespace RepoRanked.MainMenu
 
                                 popup.AddElement(scrollParent =>
                                 {
-                                    MenuAPI.CreateREPOButton("Close", () => popup.ClosePage(false), scrollParent, new Vector2(400, y - 30));
+                                    MenuAPI.CreateREPOButton("Close", () => { popup.ClosePage(false); Destroy(popup); }, scrollParent, new Vector2(400, y - 30));
                                 });
 
                                 popup.OpenPage(false);

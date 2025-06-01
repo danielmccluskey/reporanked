@@ -32,6 +32,7 @@ namespace RepoRanked.MainMenu
             if (pollingCoroutine != null) return;
 
             pageToClose?.ClosePage(true);
+            Destroy(pageToClose);
             var queuePosition = new Vector2(400, 80);
             queuePage = MenuAPI.CreateREPOPopupPage("Searching for Match...", REPOPopupPage.PresetSide.Right, false, true, 1.5f);
             queuePage.AddElement(parent =>
@@ -88,8 +89,9 @@ namespace RepoRanked.MainMenu
             if (status?.Status == "matched")
             {
                 queuePage?.ClosePage(true);
+                Destroy(queuePage);
 
-                
+
 
 
 
@@ -111,6 +113,7 @@ namespace RepoRanked.MainMenu
             }
 
             queuePage?.ClosePage(false);
+            Destroy(queuePage);
         }
     }
 }

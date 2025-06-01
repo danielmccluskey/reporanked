@@ -72,7 +72,7 @@ namespace RepoRanked.MainMenu
 
                 eloPopupPage.AddElement(parent =>
                 {
-                    MenuAPI.CreateREPOButton("Close", () => eloPopupPage.ClosePage(true), parent, new Vector2(400, 140));
+                    MenuAPI.CreateREPOButton("Close", () => { eloPopupPage.ClosePage(true); Destroy(eloPopupPage); }, parent, new Vector2(400, 140));
                 });
 
 
