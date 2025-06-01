@@ -18,6 +18,7 @@ namespace RepoRanked.MainMenu
             {
                 queueSelectorPopup?.ClosePage(true);
                 unRankedPopupPage?.ClosePage(true);
+                Destroy(unRankedPopupPage);
                 passphrasePopup = MenuAPI.CreateREPOPopupPage(
                     "Set Passphrase",
                     REPOPopupPage.PresetSide.Right,
@@ -40,9 +41,10 @@ namespace RepoRanked.MainMenu
 
                     var passphrase = DanosPassphraseManager.GetPassphrase();
 
-                    MenuAPI.CreateREPOInputField(
+                    REPOInputField? field = null;
+                    field = MenuAPI.CreateREPOInputField(
                         labelText: "Passphrase",
-                        onValueChanged: value => DanosPassphraseManager.SetPassphrase(value),
+                        onValueChanged: value => { DanosPassphraseManager.SetPassphrase(value); if (value.Length > 7) field?.inputStringSystem.SetValue(value.Substring(0, 7), true); },
                         parent: parent,
                         localPosition: new Vector2(400, 200),
                         onlyNotifyOnSubmit: false,
@@ -54,7 +56,7 @@ namespace RepoRanked.MainMenu
 
                 passphrasePopup.AddElement(parent =>
                 {
-                    MenuAPI.CreateREPOButton("Close", () => passphrasePopup.ClosePage(true), parent, new Vector2(400, 150));
+                    MenuAPI.CreateREPOButton("Close", () => { passphrasePopup.ClosePage(true); Destroy(passphrasePopup); ShowUnRankedPopup(); }, parent, new Vector2(400, 150));
                 });
             }
 

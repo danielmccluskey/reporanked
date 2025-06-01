@@ -95,7 +95,13 @@ namespace RepoRanked.MainMenu
                 playerResults = playerResults + "\n" + display;
             }
 
-            MenuManager.instance.PagePopUpScheduled($"Match results ({response.MatchId})", (response.WinnerSteamId == (long)SteamClient.SteamId.Value) ? Color.green : Color.red, $"Elo Δ changed: {response.EloChanges[(long)SteamClient.SteamId.Value]}\n{playerResults}", "GG");
+            TimeSpan time = TimeSpan.FromSeconds(RankedGameManager.matchTime);
+            string formattedTime = string.Format("{0:D2}:{1:D2}.{2:D3}", time.Minutes, time.Seconds, time.Milliseconds);
+
+            MenuManager.instance.PagePopUpScheduled($"{((response.WinnerSteamId == (long)SteamClient.SteamId.Value) ? "WON" : "LOST")} MATCH #{response.MatchId}", 
+                (response.WinnerSteamId == (long)SteamClient.SteamId.Value) ? Color.green : Color.red, $"Elo Δ changed: {response.EloChanges[(long)SteamClient.SteamId.Value]}\n{playerResults}" +
+                $"\n\n-STATS-\nTime: {formattedTime}", 
+                "OK");
         }
 
 
@@ -122,7 +128,7 @@ namespace RepoRanked.MainMenu
 
             popup.AddElement(parent =>
             {
-                MenuAPI.CreateREPOButton("Close", () => popup.ClosePage(false), parent, new Vector2(400, 100));
+                MenuAPI.CreateREPOButton("Close", () => { popup.ClosePage(true); Destroy(popup); }, parent, new Vector2(400, 100));
             });
 
             popup.OpenPage(false);
@@ -161,14 +167,15 @@ namespace RepoRanked.MainMenu
             {
                 MenuAPI.CreateREPOButton("Accept", () =>
                 {
+                    popup.ClosePage(true);
+                    Destroy(popup);
                     onAccept.Invoke();
-                    popup.ClosePage(false);
-
                 }, parent, new Vector2(400, 140));
 
                 MenuAPI.CreateREPOButton("Decline", () =>
                 {
-                    popup.ClosePage(false);
+                    popup.ClosePage(true);
+                    Destroy(popup);
                 }, parent, new Vector2(400, 100));
             });
 
