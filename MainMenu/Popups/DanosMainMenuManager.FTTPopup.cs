@@ -12,32 +12,32 @@ namespace RepoRanked.MainMenu
 {
     public partial class DanosMainMenuManager
     {
-        public REPOPopupPage? unRankedPopupPage;
+        public REPOPopupPage? fttPopupPage;
 
-        private void ShowUnRankedPopup()
+        private void ShowFTTPopup()
         {
-            if (unRankedPopupPage == null)
+            if (fttPopupPage == null)
             {
                 queueSelectorPopup?.ClosePage(true);
 
 
-                unRankedPopupPage = MenuAPI.CreateREPOPopupPage(
+                fttPopupPage = MenuAPI.CreateREPOPopupPage(
                     "REPORanked",
                     REPOPopupPage.PresetSide.Right,
                     shouldCachePage: true,
                     pageDimmerVisibility: true,
                     spacing: 1.5f
                 );
-                unRankedPopupPage.AddElement(parent =>
+                fttPopupPage.AddElement(parent =>
                 {
-                    var lab = MenuAPI.CreateREPOLabel($"Play against your friends!\nMake sure to set a Passphrase in the main menu!", parent, new Vector2(400, 260));
+                    var lab = MenuAPI.CreateREPOLabel($"This is my dev queue, \nso I can test without wrecking my elo. \nOnly Danos can queue here :)", parent, new Vector2(400, 260));
                     lab.labelTMP.color = Color.white;
                     lab.labelTMP.fontSize = 10;
                 });
-                unRankedPopupPage.AddElement(parent =>
+                fttPopupPage.AddElement(parent =>
                 {
 
-                MenuAPI.CreateREPOButton("Queue with Password (Unranked)", async () =>
+                MenuAPI.CreateREPOButton("Queue", async () =>
                 {
                     if (isProcessing)
                     {
@@ -45,11 +45,11 @@ namespace RepoRanked.MainMenu
                     }
                     isProcessing = true;
                     var steamId = (long)SteamClient.SteamId.Value;
-                    var success = await DanosAPI.Enqueue(steamId, RepoRankedApiResponseModel.QueueTypes.unranked, DanosPassphraseManager.GetPassphrase());
+                    var success = await DanosAPI.Enqueue(steamId, RepoRankedApiResponseModel.QueueTypes.monthlychallenge);
                     if (success)
                     {
-                        DanosMatchQueuePoller.Create(QueueTypes.unranked);
-                        DanosMatchQueuePoller.Instance.StartPolling(unRankedPopupPage, RepoRankedApiResponseModel.QueueTypes.unranked);
+                        DanosMatchQueuePoller.Create(QueueTypes.monthlychallenge);
+                        DanosMatchQueuePoller.Instance.StartPolling(fttPopupPage, RepoRankedApiResponseModel.QueueTypes.monthlychallenge);
                     }
                     else
                     {
@@ -61,13 +61,9 @@ namespace RepoRanked.MainMenu
 
 
                 });
-                unRankedPopupPage.AddElement(parent =>
-                {
-                    var passbutton = GetPassphraseButton(parent);
-                });
-                unRankedPopupPage.AddElement(parent =>
+                fttPopupPage.AddElement(parent =>
             {
-                MenuAPI.CreateREPOButton("Close", () => unRankedPopupPage.ClosePage(true), parent, new Vector2(400, 100));
+                MenuAPI.CreateREPOButton("Close", () => fttPopupPage.ClosePage(true), parent, new Vector2(400, 100));
             });
 
 
@@ -78,7 +74,7 @@ namespace RepoRanked.MainMenu
 
         }
 
-            unRankedPopupPage.OpenPage(false);
+            fttPopupPage.OpenPage(false);
         }
 }
 }

@@ -9,6 +9,8 @@ using System.Text;
 using UnityEngine;
 using System.Threading.Tasks;
 using RepoRanked.LevelControllers;
+using RepoRankedApiResponseModel;
+using Steamworks.Ugc;
 
 namespace RepoRanked.MainMenu
 {
@@ -18,18 +20,24 @@ namespace RepoRanked.MainMenu
         private Coroutine? pollingCoroutine;
         private REPOPopupPage? queuePage;
 
-        public static void Create()
+
+        public static QueueTypes QueueType { get; private set; } = QueueTypes.ranked;
+
+        public static void Create(QueueTypes queue)
         {
             if (Instance != null) return;
 
             var obj = new GameObject("DanosMatchQueuePoller");
             DontDestroyOnLoad(obj);
             Instance = obj.AddComponent<DanosMatchQueuePoller>();
+
+            QueueType = queue;
         }
 
-        public void StartPolling(REPOPopupPage? pageToClose)
+        public void StartPolling(REPOPopupPage? pageToClose, QueueTypes queue)
         {
             if (pollingCoroutine != null) return;
+            QueueType = queue;
 
             pageToClose?.ClosePage(true);
             var queuePosition = new Vector2(400, 80);
@@ -91,9 +99,21 @@ namespace RepoRanked.MainMenu
 
                 
 
+                if(QueueType == QueueTypes.ranked)
+                {
+                    RankedGameManager.StartMatch(status);
 
+                }
+                else if (QueueType == QueueTypes.unranked)
+                {
+                    RankedGameManager.StartMatch(status);
 
-                RankedGameManager.StartMatch(status);
+                }
+                else if (QueueType == QueueTypes.monthlychallenge)
+                {
+                    MonthlyGameManager.StartMatch(status);
+                }
+
 
 
                 return true;

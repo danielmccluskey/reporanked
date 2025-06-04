@@ -8,7 +8,7 @@ namespace RepoRanked.API
 {
     public static partial class DanosAPI
     {
-        public static async Task<MatchPingResponse?> SendMatchPing(long matchId, long steamId, int progress, int extracts, long timestamp)
+        public static async Task<MatchPingResponse?> SendMatchPing(long matchId, long steamId, int progress, int extracts, long timestamp, int level = 0)
         {
             var payload = new MatchPingRequest
             {
@@ -16,7 +16,8 @@ namespace RepoRanked.API
                 SteamId = steamId,
                 Progress = extracts,
                 ExtractionsCompleted = progress,
-                Timestamp = timestamp
+                Timestamp = timestamp,
+                Level = level
             };
 
             return await DanosAPIHandler.PostAsync<object, MatchPingResponse>("match/ping", payload);

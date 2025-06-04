@@ -2,6 +2,8 @@
 using HarmonyLib;
 using RepoRanked.LevelControllers;
 using RepoRanked.LevelGeneration;
+using RepoRanked.MainMenu;
+using RepoRankedApiResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,41 +15,72 @@ namespace RepoRanked.Patches.LevelGeneration
     {
         static bool Prefix(LevelGenerator __instance)
         {
-            if (StatsManager.instance.teamName == "REPORanked")
+            if (StatsManager.instance.teamName != "REPORanked")
+                return true;
+
+            RepoRanked.Logger.LogInfo("Using custom Generate() coroutine for REPORanked.");
+
+            string seed = null;
+
+            switch (DanosMatchQueuePoller.QueueType)
             {
-                RepoRanked.Logger.LogInfo("Using custom Generate() coroutine for REPORanked.");
+                case QueueTypes.ranked:
+                    if (RankedGameManager.Instance == null)
+                    {
+                        RepoRanked.Logger.LogError("RankedGameManager instance is null.");
+                        return true;
+                    }
+                    seed = RankedGameManager.Instance.matchData.Seed;
+                    break;
 
-                RankedGameManager gameManager = RankedGameManager.Instance;
-                if (gameManager == null)
-                {
-                    RepoRanked.Logger.LogError("RankedGameManager instance is null.");
-                    return true; // run original
-                }
+                case QueueTypes.unranked:
+                    if (RankedGameManager.Instance == null)
+                    {
+                        RepoRanked.Logger.LogError("RankedGameManager instance is null.");
+                        return true;
+                    }
+                    seed = RankedGameManager.Instance.matchData.Seed;
+                    break;
 
-                // Get the seed from the RankedGameManager
-                string seed = gameManager.matchData.Seed;
-                if (string.IsNullOrEmpty(seed))
-                {
-                    RepoRanked.Logger.LogError("Seed is null or empty.");
-                    return true; // run original
-                }
+                case QueueTypes.monthlychallenge:
+                    if (MonthlyGameManager.Instance == null)
+                    {
+                        RepoRanked.Logger.LogError("MonthlyGameManager instance is null.");
+                        return true;
+                    }
 
-                //try parse as int
-                if (!int.TryParse(seed, out int seedInt))
-                {
-                    RepoRanked.Logger.LogError($"Failed to parse seed '{seed}' as int.");
-                    return true; // run original
-                }
+                    FTTDMapData currentMapData = MonthlyGameManager.Instance.GetCurrentMapData();
+
+                    seed = currentMapData.seed.ToString();
 
 
-                DanosLevelGenerator.Create(seedInt);
-                DanosValuableGeneration.Create(seedInt);
-                UnityEngine.Random.InitState(seedInt);//catch all for anything else I missed
-                __instance.StartCoroutine(DanosLevelGenerator.GenerateWithSeed(__instance, seedInt));
-                return false; // skip original
+
+                    break;
+
+                // Add other cases as needed
+                default:
+                    RepoRanked.Logger.LogError("Unsupported queue type.");
+                    return true;
             }
 
-            return true; // run original
+            if (string.IsNullOrEmpty(seed))
+            {
+                RepoRanked.Logger.LogError("Seed is null or empty.");
+                return true;
+            }
+
+            if (!int.TryParse(seed, out int seedInt))
+            {
+                RepoRanked.Logger.LogError($"Failed to parse seed '{seed}' as int.");
+                return true;
+            }
+
+            DanosLevelGenerator.Create(seedInt);
+            DanosValuableGeneration.Create(seedInt);
+            UnityEngine.Random.InitState(seedInt); // catch-all for anything else
+            __instance.StartCoroutine(DanosLevelGenerator.GenerateWithSeed(__instance, seedInt));
+            return false;
         }
+
     }
 }

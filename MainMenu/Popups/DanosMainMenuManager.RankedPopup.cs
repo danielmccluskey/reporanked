@@ -6,6 +6,7 @@ using System.Text;
 using UnityEngine;
 using Steamworks;
 using RepoRanked.API;
+using RepoRankedApiResponseModel;
 
 namespace RepoRanked.MainMenu
 {
@@ -55,8 +56,8 @@ namespace RepoRanked.MainMenu
                         var success = await DanosAPI.Enqueue(steamId);
                         if (success)
                         {
-                            DanosMatchQueuePoller.Create();
-                            DanosMatchQueuePoller.Instance.StartPolling(eloPopupPage);
+                            DanosMatchQueuePoller.Create(QueueTypes.ranked);
+                            DanosMatchQueuePoller.Instance.StartPolling(eloPopupPage, RepoRankedApiResponseModel.QueueTypes.ranked);
                         }
                         else
                         {

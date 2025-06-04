@@ -44,7 +44,7 @@ namespace RepoRanked.MainMenu
 
                 queueSelectorPopup.AddElement(parent =>
                 {
-                    var unrankedButton = GetLMSButton(parent);
+                    var unrankedButton = GetFTTButton(parent);
                 });
 
 

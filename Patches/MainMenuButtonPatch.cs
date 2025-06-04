@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
 using RepoRanked.LevelControllers;
+using RepoRanked.MainMenu;
+using RepoRankedApiResponseModel;
 using Steamworks;
 using System;
 using System.Collections.Generic;
@@ -35,12 +37,37 @@ namespace RepoRanked.Patches
 
         private static void ForfitMatch()
         {
-            RankedGameManager inst = RankedGameManager.Instance;
-            if (inst == null)
+
+
+            switch (DanosMatchQueuePoller.QueueType)
             {
-                return;
+                case QueueTypes.ranked:
+                    RankedGameManager inst = RankedGameManager.Instance;
+                    if (inst == null)
+                    {
+                        return;
+                    }
+                    inst.CompleteMatch("forfeit");
+                    break;
+
+                case QueueTypes.unranked:
+                    RankedGameManager unrankedInst = RankedGameManager.Instance;
+                    if (unrankedInst == null)
+                    {
+                        return;
+                    }
+                    unrankedInst.CompleteMatch("forfeit");
+                    break;
+
+                case QueueTypes.monthlychallenge:
+                    MonthlyGameManager monthlyInst = MonthlyGameManager.Instance;
+                    if (monthlyInst == null)
+                    {
+                        return;
+                    }
+                    monthlyInst.CompleteMatch("forfeit");
+                    break;
             }
-            inst.CompleteMatch("forfeit");
         }
     }
 }

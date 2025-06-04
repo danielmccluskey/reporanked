@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using static LevelGenerator;
+using static UnityEngine.ParticleSystem.PlaybackState;
 
 namespace RepoRanked.LevelGeneration
 {
@@ -13,9 +14,11 @@ namespace RepoRanked.LevelGeneration
     {
         public static DanosLevelGenerator? Instance { get; private set; }
         public System.Random rng;
+        public static int Seed = 0;
         private DanosLevelGenerator(int seed)
         {
             rng = new System.Random(seed);
+            Seed = seed;
         }
 
         public static void Create(int seed)
@@ -36,7 +39,9 @@ namespace RepoRanked.LevelGeneration
 
         public static IEnumerator GenerateWithSeed(LevelGenerator instance, int seedBase)
         {
-            
+            Seed = seedBase;
+
+
 
 
 

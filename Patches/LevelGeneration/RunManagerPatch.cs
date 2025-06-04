@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
 using RepoRanked.LevelControllers;
+using RepoRanked.MainMenu;
+using RepoRankedApiResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,28 +27,101 @@ namespace RepoRanked.Patches.LevelGeneration
     {
         static void Postfix(RunManager __instance)
         {
+            
+            Debug.Log($"RunManagerPatch_SetRunLevel: DanosMatchQueuePoller.QueueType = {DanosMatchQueuePoller.QueueType}");
+
+            switch (DanosMatchQueuePoller.QueueType)
+            {
+                case QueueTypes.ranked:
+                    RankedLogic(__instance);
+                    break;
+                case QueueTypes.unranked:
+                    RankedLogic(__instance);
+                    break;
+                case QueueTypes.monthlychallenge:
+                    MonthlyLogic(__instance);
+                    break;
+                default:
+                    RepoRanked.Logger.LogWarning("Unsupported queue type for SetRunLevel.");
+                    break;
+            }
+
+
+
+
+
+        }
+
+        private static void MonthlyLogic(RunManager instance)
+        {
+            List<Level> levels = instance.levels;
+            if (levels == null || levels.Count == 0)
+            {
+                RepoRanked.Logger.LogWarning("RunManager.levels is empty or null.");
+                return;
+            }
+            if (MonthlyGameManager.Instance == null)
+            {
+                RepoRanked.Logger.LogWarning("MonthlyGameManager.Instance is null.");
+                return;
+            }
+            if (MonthlyGameManager.Instance.FirstToTenData == null)
+            {
+                RepoRanked.Logger.LogWarning("MonthlyGameManager.Instance is null.");
+                return;
+            }
+
+
+
+            FTTDMapData currentMapData = MonthlyGameManager.Instance.GetCurrentMapData();
+            if (currentMapData == null)
+            {
+                RepoRanked.Logger.LogWarning("Current map data is null.");
+                return;
+            }
+
+            string mapName = currentMapData.map;
+            if (string.IsNullOrEmpty(mapName))
+            {
+                RepoRanked.Logger.LogWarning("Map name is null or empty.");
+                return;
+            }
+
+            //Set the level
+            foreach (var level in levels)
+            {
+                if (level != null && level.ResourcePath.Contains(mapName))
+                {
+                    instance.levelCurrent = level;
+                    RepoRanked.Logger.LogInfo($"Set currentLevel to: {level.ResourcePath}");
+                    break;
+                }
+            }
+
+        }
+
+        private static void RankedLogic(RunManager __instance)
+        {
             List<Level> levels = __instance.levels;
             if (levels == null || levels.Count == 0)
             {
                 RepoRanked.Logger.LogWarning("RunManager.levels is empty or null.");
                 return;
             }
-
-
-            if(RankedGameManager.Instance == null)
+            if (RankedGameManager.Instance == null)
             {
                 RepoRanked.Logger.LogWarning("RankedGameManager.Instance is null.");
                 return;
             }
 
-            if(RankedGameManager.Instance.matchData == null)
+            if (RankedGameManager.Instance.matchData == null)
             {
                 RepoRanked.Logger.LogWarning("RankedGameManager.Instance.matchData is null.");
                 return;
             }
 
             string mapName = RankedGameManager.Instance.matchData.Map;
-            if(mapName == "unknown")
+            if (mapName == "unknown")
             {
                 mapName = "Wizard";
             }
@@ -79,7 +154,6 @@ namespace RepoRanked.Patches.LevelGeneration
                     break;
                 }
             }
-
 
         }
     }

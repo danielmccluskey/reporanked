@@ -1,6 +1,8 @@
 ﻿using HarmonyLib;
 using RepoRanked.EnemyGeneration;
 using RepoRanked.LevelControllers;
+using RepoRanked.MainMenu;
+using RepoRankedApiResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,19 +20,50 @@ namespace RepoRanked.Patches.EnemyDirectorP
             //EnemyExtractor.GenerateEnemiesJson(__instance);
             if (StatsManager.instance.teamName == "REPORanked")
             {
-                if(RankedGameManager.Instance == null)
+                EnemySetup customGen;
+
+                switch(DanosMatchQueuePoller.QueueType)
                 {
-                    RepoRanked.Logger.LogWarning("RankedGameManager.Instance is null.");
-                    return true;
+                    case QueueTypes.ranked:
+                        if (RankedGameManager.Instance == null)
+                        {
+                            RepoRanked.Logger.LogWarning("RankedGameManager.Instance is null.");
+                            return true;
+                        }
+
+                        if (RankedGameManager.Instance.matchData == null)
+                        {
+                            RepoRanked.Logger.LogWarning("RankedGameManager.Instance.matchData is null.");
+                            return true;
+                        }
+                        customGen = DanosEnemyGenerator.CreateCustomEnemySetup(RankedGameManager.Instance.matchData.Enemies);
+                        break;
+                    case QueueTypes.unranked:
+                        if (RankedGameManager.Instance == null)
+                        {
+                            RepoRanked.Logger.LogWarning("RankedGameManager.Instance is null.");
+                            return true;
+                        }
+
+                        if (RankedGameManager.Instance.matchData == null)
+                        {
+                            RepoRanked.Logger.LogWarning("RankedGameManager.Instance.matchData is null.");
+                            return true;
+                        }
+                        customGen = DanosEnemyGenerator.CreateCustomEnemySetup(RankedGameManager.Instance.matchData.Enemies);
+                        break;
+                    case QueueTypes.monthlychallenge:
+                        customGen = DanosEnemyGenerator.CreateCustomEnemySetup(MonthlyGameManager.Instance.GetCurrentMapData().Enemies);
+                        break;
+                    default:
+                        RepoRanked.Logger.LogWarning("Unsupported queue type for EnemyDirector.AmountSetup.");
+                        return true; // Proceed with original method
                 }
 
-                if (RankedGameManager.Instance.matchData == null)
-                {
-                    RepoRanked.Logger.LogWarning("RankedGameManager.Instance.matchData is null.");
-                    return true;
-                }
+
+
+                
                 __instance.enemyList = new List<EnemySetup>();
-                EnemySetup customGen = DanosEnemyGenerator.CreateCustomEnemySetup(RankedGameManager.Instance.matchData.Enemies);
                 if (customGen != null)
                 {
                     List<EnemySetup> customEnemyLlist = new List<EnemySetup>();

@@ -6,6 +6,7 @@ using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -15,27 +16,18 @@ namespace RepoRanked.MainMenu
     {
 
 
-        public REPOButton GetLMSButton(Transform parent)
+        public REPOButton GetFTTButton(Transform parent)
         {
-            var rankedButton = MenuAPI.CreateREPOButton(
-                    "More coming soon!",
-                    async () =>
-                    {
-                       
-
-                        
-                    },
-                    parent,
-                    localPosition: new Vector2(380, 160)
-                );
-
-
-            rankedButton.GetComponent<MenuButton>().enabled = false;
-            rankedButton.GetComponent<MenuSelectableElement>().enabled = false;
-            rankedButton.transform.GetChild(0).GetComponent<TMP_Text>().color = new Color(1, 1, 1, 0.1f);
-
-            return rankedButton;
-
+            return CreateQueueButton(
+                "Dev Queue",
+                new Vector2(380, 160),
+                response =>
+                {
+                    ShowFTTPopup();
+                    return Task.CompletedTask;
+                },
+                parent
+            );
         }
     }
 }

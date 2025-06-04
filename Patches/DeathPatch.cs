@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
 using RepoRanked.LevelControllers;
+using RepoRanked.MainMenu;
+using RepoRankedApiResponseModel;
 using Steamworks;
 using System;
 using System.Collections.Generic;
@@ -15,14 +17,42 @@ namespace RepoRanked.Patches
         [HarmonyPostfix]
         public static void PlayerDeathRPCPostfix(PlayerAvatar __instance, int enemyIndex)
         {
-            Debug.Log($"[REPORanked] PlayerDeathRPCPostfix called for {__instance.name} with enemyIndex {enemyIndex}");
-            RankedGameManager inst = RankedGameManager.Instance;
-            if (inst == null)
+            switch (DanosMatchQueuePoller.QueueType)
             {
-                return;
-            }
+                case QueueTypes.ranked:
+                    RankedGameManager inst = RankedGameManager.Instance;
+                    if (inst == null)
+                    {
+                        return;
+                    }
+                    inst.CompleteMatch("dead");
+                    break;
 
-            inst.CompleteMatch("dead");
+                case QueueTypes.unranked:
+                    RankedGameManager unrankedInst = RankedGameManager.Instance;
+                    if (unrankedInst == null)
+                    {
+                        return;
+                    }
+                    unrankedInst.CompleteMatch("dead");
+                    break;
+
+                case QueueTypes.monthlychallenge:
+
+                    if(SemiFunc.RunIsShop())
+                    {
+                        return;
+                    }
+
+
+                    MonthlyGameManager monthlyInst = MonthlyGameManager.Instance;
+                    if (monthlyInst == null)
+                    {
+                        return;
+                    }
+                    monthlyInst.CompleteMatch("dead");
+                    break;
+            }
 
 
 
