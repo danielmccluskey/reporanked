@@ -19,7 +19,7 @@ namespace RepoRanked.MainMenu
         public REPOButton GetFTTButton(Transform parent)
         {
             return CreateQueueButton(
-                "Dev Queue",
+                "Set Seed Queue",
                 new Vector2(380, 160),
                 response =>
                 {

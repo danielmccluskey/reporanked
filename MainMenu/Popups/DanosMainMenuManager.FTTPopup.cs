@@ -30,7 +30,7 @@ namespace RepoRanked.MainMenu
                 );
                 fttPopupPage.AddElement(parent =>
                 {
-                    var lab = MenuAPI.CreateREPOLabel($"This is my dev queue, \nso I can test without wrecking my elo. \nOnly Danos can queue here :)", parent, new Vector2(400, 260));
+                    var lab = MenuAPI.CreateREPOLabel($"10 Level Set Seed Comp\nCheck the Discord for more info :D", parent, new Vector2(400, 260));
                     lab.labelTMP.color = Color.white;
                     lab.labelTMP.fontSize = 10;
                 });
