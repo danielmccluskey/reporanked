@@ -12,7 +12,7 @@ using RepoRanked.LevelControllers;
 using RepoRankedApiResponseModel;
 using Steamworks.Ugc;
 
-namespace RepoRanked.MainMenu
+namespace RepoRanked.MainMenu.QueuePollers
 {
     public class DanosMatchQueuePoller : MonoBehaviour
     {
@@ -51,7 +51,7 @@ namespace RepoRanked.MainMenu
                     var success = await DanosAPI.DeQueue(steamId);
                     if (success)
                     {
-                        DanosMatchQueuePoller.Instance?.StopPolling();
+                        Instance?.StopPolling();
 
                     }
                     else

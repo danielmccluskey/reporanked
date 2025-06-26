@@ -9,8 +9,9 @@ namespace RepoRanked.API
 {
     public static class DanosAPIHandler
     {
-        private static string baseUrl = "https://reporankedapi.splitstats.io/api"; // change this to your API base URL
-        
+        private static string baseUrl = "https://reporankedapi.splitstats.io/api"; // change this to your API base URLhttps://localhost:7240/
+        //private static string baseUrl = "https://localhost:7240/api"; // change this to your API base URL
+
         public static async Task<T?> GetAsync<T>(string endpoint)
         {
             //baseUrl = "https://localhost:7240/api";

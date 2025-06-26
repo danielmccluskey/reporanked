@@ -7,6 +7,7 @@ using UnityEngine;
 using Steamworks;
 using RepoRanked.API;
 using RepoRankedApiResponseModel;
+using RepoRanked.MainMenu.QueuePollers;
 
 namespace RepoRanked.MainMenu
 {

@@ -2,7 +2,7 @@
 using HarmonyLib;
 using RepoRanked.LevelControllers;
 using RepoRanked.LevelGeneration;
-using RepoRanked.MainMenu;
+using RepoRanked.MainMenu.QueuePollers;
 using RepoRankedApiResponseModel;
 using System;
 using System.Collections.Generic;

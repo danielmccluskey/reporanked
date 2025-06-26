@@ -7,6 +7,7 @@ using UnityEngine;
 using Steamworks;
 using RepoRanked.API;
 using RepoRankedApiResponseModel;
+using RepoRanked.MainMenu.QueuePollers;
 
 namespace RepoRanked.MainMenu
 {
@@ -45,11 +46,11 @@ namespace RepoRanked.MainMenu
                     }
                     isProcessing = true;
                     var steamId = (long)SteamClient.SteamId.Value;
-                    var success = await DanosAPI.Enqueue(steamId, RepoRankedApiResponseModel.QueueTypes.monthlychallenge);
+                    var success = await DanosAPI.Enqueue(steamId, RepoRankedApiResponseModel.QueueTypes.firsttoten);
                     if (success)
                     {
-                        DanosMatchQueuePoller.Create(QueueTypes.monthlychallenge);
-                        DanosMatchQueuePoller.Instance.StartPolling(fttPopupPage, RepoRankedApiResponseModel.QueueTypes.monthlychallenge);
+                        DanosLobbyQueuePoller.Create();
+                        DanosLobbyQueuePoller.Instance.StartPolling(fttPopupPage);
                     }
                     else
                     {
