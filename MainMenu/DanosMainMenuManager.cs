@@ -172,14 +172,15 @@ namespace RepoRanked.MainMenu
                    localPosition: new Vector2(400, 140));
                 MenuAPI.CreateREPOButton("Accept", () =>
                 {
+                    popup.ClosePage(true);
+
                     onAccept.Invoke();
-                    popup.ClosePage(false);
 
                 }, parent, new Vector2(400, 100));
 
                 MenuAPI.CreateREPOButton("Decline", () =>
                 {
-                    popup.ClosePage(false);
+                    popup.ClosePage(true);
                 }, parent, new Vector2(400, 60));
             });
 
