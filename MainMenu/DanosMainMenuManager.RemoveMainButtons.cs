@@ -20,16 +20,19 @@ namespace RepoRanked.MainMenu
         {
             foreach (Transform child in parent)
             {
-
+                Debug.Log($"Removing child: {child.name} from parent: {parent.name}");
                 switch (child.name)
                 {
-                    case "Menu Button - host game":
+                    case "Menu Button - Private Game":
                         hostPosition = child.localPosition;
                         Destroy(child.gameObject);
                         break;
 
-                    case "Menu Button - join game":
+                    case "Menu Button - Public Game":
                         joinPosition = child.localPosition;
+                        Destroy(child.gameObject);
+                        break;
+                    case "Menu Button - join friend":
                         Destroy(child.gameObject);
                         break;
 

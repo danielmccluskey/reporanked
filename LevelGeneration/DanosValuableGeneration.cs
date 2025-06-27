@@ -29,23 +29,38 @@ namespace RepoRanked.LevelGeneration
         }
 
         public int Range(int min, int max) => rng.Next(min, max);
-        
+
 
         public IEnumerator SetupHost(ValuableDirector instance)
         {
-            float time = SemiFunc.RunGetDifficultyMultiplier();
-            if (SemiFunc.RunIsArena())
+            if (SemiFunc.RunGetDifficultyMultiplier2() > 0f && !SemiFunc.RunIsArena())
             {
-                time = 0.75f;
+                float time = SemiFunc.RunGetDifficultyMultiplier2();
+                instance.totalMaxValue = Mathf.RoundToInt(instance.totalMaxValueCurve2.Evaluate(time));
+                instance.tinyMaxAmount = Mathf.RoundToInt(instance.tinyMaxAmountCurve2.Evaluate(time));
+                instance.smallMaxAmount = Mathf.RoundToInt(instance.smallMaxAmountCurve2.Evaluate(time));
+                instance.mediumMaxAmount = Mathf.RoundToInt(instance.mediumMaxAmountCurve2.Evaluate(time));
+                instance.bigMaxAmount = Mathf.RoundToInt(instance.bigMaxAmountCurve2.Evaluate(time));
+                instance.wideMaxAmount = Mathf.RoundToInt(instance.wideMaxAmountCurve2.Evaluate(time));
+                instance.tallMaxAmount = Mathf.RoundToInt(instance.tallMaxAmountCurve2.Evaluate(time));
+                instance.veryTallMaxAmount = Mathf.RoundToInt(instance.veryTallMaxAmountCurve2.Evaluate(time));
             }
-            instance.totalMaxAmount = Mathf.RoundToInt(instance.totalMaxAmountCurve.Evaluate(time));
-            instance.tinyMaxAmount = Mathf.RoundToInt(instance.tinyMaxAmountCurve.Evaluate(time));
-            instance.smallMaxAmount = Mathf.RoundToInt(instance.smallMaxAmountCurve.Evaluate(time));
-            instance.mediumMaxAmount = Mathf.RoundToInt(instance.mediumMaxAmountCurve.Evaluate(time));
-            instance.bigMaxAmount = Mathf.RoundToInt(instance.bigMaxAmountCurve.Evaluate(time));
-            instance.wideMaxAmount = Mathf.RoundToInt(instance.wideMaxAmountCurve.Evaluate(time));
-            instance.tallMaxAmount = Mathf.RoundToInt(instance.tallMaxAmountCurve.Evaluate(time));
-            instance.veryTallMaxAmount = Mathf.RoundToInt(instance.veryTallMaxAmountCurve.Evaluate(time));
+            else
+            {
+                float time2 = SemiFunc.RunGetDifficultyMultiplier1();
+                if (SemiFunc.RunIsArena())
+                {
+                    time2 = 0.75f;
+                }
+                instance.totalMaxValue = Mathf.RoundToInt(instance.totalMaxValueCurve1.Evaluate(time2));
+                instance.tinyMaxAmount = Mathf.RoundToInt(instance.tinyMaxAmountCurve1.Evaluate(time2));
+                instance.smallMaxAmount = Mathf.RoundToInt(instance.smallMaxAmountCurve1.Evaluate(time2));
+                instance.mediumMaxAmount = Mathf.RoundToInt(instance.mediumMaxAmountCurve1.Evaluate(time2));
+                instance.bigMaxAmount = Mathf.RoundToInt(instance.bigMaxAmountCurve1.Evaluate(time2));
+                instance.wideMaxAmount = Mathf.RoundToInt(instance.wideMaxAmountCurve1.Evaluate(time2));
+                instance.tallMaxAmount = Mathf.RoundToInt(instance.tallMaxAmountCurve1.Evaluate(time2));
+                instance.veryTallMaxAmount = Mathf.RoundToInt(instance.veryTallMaxAmountCurve1.Evaluate(time2));
+            }
             if (SemiFunc.RunIsArena())
             {
                 instance.totalMaxAmount /= 2;
@@ -85,6 +100,7 @@ namespace RepoRanked.LevelGeneration
             if (instance.valuableDebug == ValuableDebug.All)
             {
                 instance.totalMaxAmount = list.Count;
+                instance.totalMaxValue = 99999f;
                 instance.tinyMaxAmount = instance.tinyVolumes.Count;
                 instance.smallMaxAmount = instance.smallVolumes.Count;
                 instance.mediumMaxAmount = instance.mediumVolumes.Count;
@@ -110,7 +126,7 @@ namespace RepoRanked.LevelGeneration
             List<ValuableVolume>[] _volumes = new List<ValuableVolume>[7] { instance.tinyVolumes, instance.smallVolumes, instance.mediumVolumes, instance.bigVolumes, instance.wideVolumes, instance.tallVolumes, instance.veryTallVolumes };
             string[] _path = new string[7] { instance.tinyPath, instance.smallPath, instance.mediumPath, instance.bigPath, instance.widePath, instance.tallPath, instance.veryTallPath };
             int[] _chance = new int[7] { instance.tinyChance, instance.smallChance, instance.mediumChance, instance.bigChance, instance.wideChance, instance.tallChance, instance.veryTallChance };
-            List<GameObject>[] _valuables = new List<GameObject>[7] {instance.tinyValuables, instance.smallValuables, instance.mediumValuables, instance.bigValuables, instance.wideValuables, instance.tallValuables, instance.veryTallValuables };
+            List<GameObject>[] _valuables = new List<GameObject>[7] { instance.tinyValuables, instance.smallValuables, instance.mediumValuables, instance.bigValuables, instance.wideValuables, instance.tallValuables, instance.veryTallValuables };
             int[] _volumeIndex = new int[7];
             for (int _i = 0; _i < instance.totalMaxAmount; _i++)
             {
@@ -120,7 +136,6 @@ namespace RepoRanked.LevelGeneration
                 {
                     if (_volumeIndex[i] < _maxAmount[i] && _volumeIndex[i] < _volumes[i].Count)
                     {
-
                         int num3 = Range(0, _chance[i]);
                         if ((float)num3 > num)
                         {
@@ -165,5 +180,6 @@ namespace RepoRanked.LevelGeneration
             }
             instance.setupComplete = true;
         }
+
     }
 }

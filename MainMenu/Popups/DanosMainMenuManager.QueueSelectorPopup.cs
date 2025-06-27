@@ -42,10 +42,10 @@ namespace RepoRanked.MainMenu
                     var unrankedButton = GetUnRankedButton(parent);
                 });
 
-                queueSelectorPopup.AddElement(parent =>
-                {
-                    var unrankedButton = GetFTTButton(parent);
-                });
+                //queueSelectorPopup.AddElement(parent =>
+                //{
+                //    var unrankedButton = GetFTTButton(parent);
+                //});
 
 
 

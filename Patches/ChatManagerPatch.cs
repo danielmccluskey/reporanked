@@ -1,9 +1,11 @@
 ﻿using HarmonyLib;
+using Photon.Pun;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using static ChatManager;
+using static UnityEngine.InputSystem.InputRemoting;
 
 namespace RepoRanked.Patches
 {
@@ -14,7 +16,7 @@ namespace RepoRanked.Patches
         [HarmonyPrefix]
         public static bool UpdatePrefix(ChatManager __instance)
         {
-
+            instance.chatActive = true;
             instance.PossessionActive();
             if ((bool)instance.playerAvatar && instance.playerAvatar.isDisabled && (instance.possessBatchQueue.Count > 0 || instance.currentBatch != null))
             {
@@ -25,7 +27,7 @@ namespace RepoRanked.Patches
                 instance.NewLevelResets();
                 return false;
             }
-            instance.ImportantFetches();
+            ImportantFetches(__instance);
             instance.PossessChatCustomLogic();
             if (!instance.textMeshFetched || !instance.localPlayerAvatarFetched)
             {
@@ -47,15 +49,7 @@ namespace RepoRanked.Patches
                     break;
             }
             instance.PossessChatCustomLogic();
-            if (!SemiFunc.IsMultiplayer())
-            {
-                if (instance.chatState != 0)
-                {
-                    instance.StateSet(ChatState.Inactive);
-                }
-                instance.chatActive = false;
-                return false;
-            }
+            
             if (instance.spamTimer > 0f)
             {
                 instance.spamTimer -= Time.deltaTime;
@@ -79,7 +73,47 @@ namespace RepoRanked.Patches
         }
 
 
-
+        private static void ImportantFetches(ChatManager __instance)
+        {
+            if (!__instance.chatText)
+            {
+                __instance.textMeshFetched = false;
+            }
+            if (!__instance.playerAvatar)
+            {
+                __instance.localPlayerAvatarFetched = false;
+            }
+            if (!__instance.textMeshFetched && (bool)ChatUI.instance && (bool)ChatUI.instance.chatText)
+            {
+                __instance.chatText = ChatUI.instance.chatText;
+                __instance.textMeshFetched = true;
+            }
+            if (__instance.localPlayerAvatarFetched)
+            {
+                return;
+            }
+            
+                List<PlayerAvatar> list = SemiFunc.PlayerGetList();
+                if (list.Count <= 0)
+                {
+                    return;
+                }
+                {
+                    foreach (PlayerAvatar item in list)
+                    {
+                        if (item.isLocal)
+                        {
+                            __instance.playerAvatar = item;
+                            __instance.localPlayerAvatarFetched = true;
+                            break;
+                        }
+                    }
+                    return;
+                }
+            
+            __instance.playerAvatar = PlayerAvatar.instance;
+            __instance.localPlayerAvatarFetched = true;
+        }
 
 
 

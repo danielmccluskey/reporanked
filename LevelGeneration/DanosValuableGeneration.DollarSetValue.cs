@@ -13,18 +13,21 @@ namespace RepoRanked.LevelGeneration
     {
         public void DollarValueSetLogic(ValuableObject valuableInstance)
         {
-            if (valuableInstance.dollarValueOverride != 0)
+            if (!valuableInstance.dollarValueSet)
             {
-                valuableInstance.dollarValueOriginal = valuableInstance.dollarValueOverride;
-                valuableInstance.dollarValueCurrent = valuableInstance.dollarValueOverride;
-            }
-            else
-            {
+                if (valuableInstance.dollarValueOverride != 0)
+                {
+                    valuableInstance.dollarValueOriginal = valuableInstance.dollarValueOverride;
+                    valuableInstance.dollarValueCurrent = valuableInstance.dollarValueOverride;
+                }
+                else
+                {
                 valuableInstance.dollarValueOriginal = Mathf.Round(rng.Next((int)valuableInstance.valuePreset.valueMin, (int)valuableInstance.valuePreset.valueMax));
-                valuableInstance.dollarValueOriginal = Mathf.Round(valuableInstance.dollarValueOriginal / 100f) * 100f;
-                valuableInstance.dollarValueCurrent = valuableInstance.dollarValueOriginal;
+                    valuableInstance.dollarValueOriginal = Mathf.Round(valuableInstance.dollarValueOriginal / 100f) * 100f;
+                    valuableInstance.dollarValueCurrent = valuableInstance.dollarValueOriginal;
+                }
+                valuableInstance.dollarValueSet = true;
             }
-            valuableInstance.dollarValueSet = true;
 
         }
 

@@ -105,6 +105,11 @@ namespace RepoRanked.Mods
                     {
                         IsGameVersionCompliant = false;
                     }
+                    if(!currentVersion.title.ToLower().Contains("0.2."))
+                    {
+                        IsGameVersionCompliant = false;
+                    }
+
                     else
                     {
                         IsGameVersionCompliant = true;

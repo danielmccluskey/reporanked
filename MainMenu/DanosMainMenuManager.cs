@@ -150,27 +150,37 @@ namespace RepoRanked.MainMenu
                 var lab = MenuAPI.CreateREPOLabel(
                     "To use REPORanked, we collect your SteamID and match data.\n" +
                     "This is used solely for matchmaking, match tracking and\nElo calculations.\n\n" +
-                    "As this is still in development, we cannot offer data deletion\nmethods just yet.\n\n" +
-                    "By continuing, you consent to this data being collected\nand the above conditions regarding data management.",
+                    "You can view the full policy by clicking 'View Policy' below\n" +
+                    "By continuing, you consent to this data being collected\nand agree to the Privacy Policy located at\nhttps://reporanked.splitstats.io/PrivacyPolicy.",
                     parent,
                     new Vector2(400, 220)
                 );
                 lab.labelTMP.fontSize = 10;
             });
+            
 
             popup.AddElement(parent =>
             {
+
+                MenuAPI.CreateREPOButton(
+                   "View Policy",
+                   () =>
+                   {
+                       Application.OpenURL("https://reporanked.splitstats.io/PrivacyPolicy");
+                   },
+                   parent,
+                   localPosition: new Vector2(400, 140));
                 MenuAPI.CreateREPOButton("Accept", () =>
                 {
                     onAccept.Invoke();
                     popup.ClosePage(false);
 
-                }, parent, new Vector2(400, 140));
+                }, parent, new Vector2(400, 100));
 
                 MenuAPI.CreateREPOButton("Decline", () =>
                 {
                     popup.ClosePage(false);
-                }, parent, new Vector2(400, 100));
+                }, parent, new Vector2(400, 60));
             });
 
             popup.OpenPage(false);

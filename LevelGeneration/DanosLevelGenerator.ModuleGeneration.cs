@@ -40,9 +40,9 @@ namespace RepoRanked.LevelGeneration
             instance.ModulesExtractionShuffled_1 = new List<GameObject>();
             instance.ModulesExtractionShuffled_2 = new List<GameObject>();
             instance.ModulesExtractionShuffled_3 = new List<GameObject>();
-            instance.ModuleRarity1 = instance.DifficultyCurve1.Evaluate(SemiFunc.RunGetDifficultyMultiplier());
-            instance.ModuleRarity2 = instance.DifficultyCurve2.Evaluate(SemiFunc.RunGetDifficultyMultiplier());
-            instance.ModuleRarity3 = instance.DifficultyCurve3.Evaluate(SemiFunc.RunGetDifficultyMultiplier());
+            instance.ModuleRarity1 = instance.DifficultyCurve1.Evaluate(SemiFunc.RunGetDifficultyMultiplier1());
+            instance.ModuleRarity2 = instance.DifficultyCurve2.Evaluate(SemiFunc.RunGetDifficultyMultiplier1());
+            instance.ModuleRarity3 = instance.DifficultyCurve3.Evaluate(SemiFunc.RunGetDifficultyMultiplier1());
             if (!instance.DebugModule)
             {
                 instance.ModulesNormalShuffled_1.AddRange(instance.Level.ModulesNormal1);
