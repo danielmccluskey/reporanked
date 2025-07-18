@@ -12,9 +12,11 @@ namespace RepoRanked.LevelGeneration
     public partial class DanosValuableGeneration
     {
         public static DanosValuableGeneration? Instance { get; private set; }
+        private System.Random rng2;
         private System.Random rng;
         private DanosValuableGeneration(int seed)
         {
+            rng2 = new System.Random(seed); 
             rng = new System.Random(seed);
         }
 
@@ -29,6 +31,7 @@ namespace RepoRanked.LevelGeneration
         }
 
         public int Range(int min, int max) => rng.Next(min, max);
+        public int Range2(int min, int max) => rng2.Next(min, max);
 
 
         public IEnumerator SetupHost(ValuableDirector instance)

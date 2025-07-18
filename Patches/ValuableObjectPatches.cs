@@ -7,6 +7,7 @@ using System.Text;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine.AI;
 using UnityEngine;
+using RepoRanked.EnemyGeneration;
 
 namespace RepoRanked.Patches
 {
@@ -19,6 +20,7 @@ namespace RepoRanked.Patches
         {
             if (DanosValuableGeneration.Instance == null)
             {
+                Debug.LogError("DanosValuableGeneration instance is null. Please ensure it is initialized before calling DollarValueSetLogic.");
                 return true;
             }
 
@@ -35,7 +37,7 @@ namespace RepoRanked.Patches
 
         static bool QueueObjectPrefix(ValuableObject __instance)
         {
-
+            DollarValueGenerationQueue.Enqueue(__instance);
 
             __instance.physGrabObject = __instance.GetComponent<PhysGrabObject>();
             __instance.roomVolumeCheck = __instance.GetComponent<RoomVolumeCheck>();
@@ -65,6 +67,5 @@ namespace RepoRanked.Patches
 
             return false;
         }
-
     }
 }

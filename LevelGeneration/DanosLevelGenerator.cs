@@ -34,7 +34,7 @@ namespace RepoRanked.LevelGeneration
 
         public int Range(int min, int max) => rng.Next(min, max);
 
-        
+
 
 
         public static IEnumerator GenerateWithSeed(LevelGenerator instance, int seedBase)
@@ -65,26 +65,31 @@ namespace RepoRanked.LevelGeneration
                 {
                     instance.ModuleAmount = instance.DebugAmount;
                 }
+                UnityEngine.Random.InitState(seedBase);
+
                 instance.StartCoroutine(DanosLevelGenerator.TileGeneration(instance));
                 while (instance.waitingForSubCoroutine)
                 {
                     yield return null;
                 }
+                UnityEngine.Random.InitState(seedBase);
+
                 instance.StartCoroutine(DanosLevelGenerator.StartRoomGeneration(instance));
                 while (instance.waitingForSubCoroutine)
                 {
                     yield return null;
                 }
+                UnityEngine.Random.InitState(seedBase);
+
                 instance.StartCoroutine(DanosLevelGenerator.GenerateConnectObjects(instance));
                 while (instance.waitingForSubCoroutine)
                 {
                     yield return null;
                 }
-                instance.StartCoroutine(DanosLevelGenerator.ModuleGeneration(instance));
-                while (instance.waitingForSubCoroutine)
-                {
-                    yield return null;
-                }
+                UnityEngine.Random.InitState(seedBase);
+
+                DanosLevelGenerator.ModuleGeneration(instance);
+
                 instance.StartCoroutine(DanosLevelGenerator.GenerateBlockObjects(instance));
                 while (instance.waitingForSubCoroutine)
                 {
@@ -109,6 +114,8 @@ namespace RepoRanked.LevelGeneration
                 instance.State = LevelState.ModuleSpawnRemote;
                 yield return new WaitForSeconds(0.1f);
             }
+            UnityEngine.Random.InitState(seedBase);
+
             EnvironmentDirector.Instance.Setup();
             PostProcessing.Instance.Setup();
             LevelMusic.instance.Setup();
@@ -123,13 +130,16 @@ namespace RepoRanked.LevelGeneration
                 instance.State = LevelState.Item;
                 if (!SemiFunc.IsMultiplayer())
                 {
+                    UnityEngine.Random.InitState(seedBase);
+
                     instance.ItemSetup();
                 }
                 else
                 {
                     instance.PhotonView.RPC("ItemSetup", RpcTarget.AllBuffered);
                 }
-                UnityEngine.Random.InitState(seedBase + 5);
+                UnityEngine.Random.InitState(seedBase);
+
                 instance.StartCoroutine(DanosValuableGeneration.Instance.SetupHost(ValuableDirector.instance));
                 while (!ValuableDirector.instance.setupComplete)
                 {
@@ -152,6 +162,8 @@ namespace RepoRanked.LevelGeneration
                 }
                 if (instance.Level.HasEnemies && !instance.DebugNoEnemy)
                 {
+                    UnityEngine.Random.InitState(seedBase);
+
                     instance.EnemySetup();
                     yield return null;
                     if (GameManager.Multiplayer())
@@ -225,6 +237,7 @@ namespace RepoRanked.LevelGeneration
                     instance.ModuleAmount += Mathf.Min(RunManager.instance.levelsCompleted - 9, 5);
                 }
                 instance.ModuleAmount = Mathf.CeilToInt((float)instance.ModuleAmount * instance.DebugLevelSize);
+
                 if (!instance.DebugModule)
                 {
                     instance.DeadEndAmount = Mathf.CeilToInt(instance.ModuleAmount / 3);
@@ -389,7 +402,6 @@ namespace RepoRanked.LevelGeneration
             instance.State = LevelState.StartRoom;
             List<GameObject> list = new List<GameObject>();
             list.AddRange(instance.Level.StartRooms);
-            list.ShuffleWithRng(Instance.rng);
             if ((bool)instance.DebugStartRoom)
             {
                 list[0] = instance.DebugStartRoom;

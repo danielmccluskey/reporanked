@@ -10,6 +10,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using RepoRanked.LevelControllers;
 using RepoRankedApiResponseModel;
+using RepoRanked.MainMenu.QueuePollers;
 
 namespace RepoRanked.MainMenu
 {
@@ -84,8 +85,9 @@ namespace RepoRanked.MainMenu
 
         private IEnumerator PollLobbyStatus()
         {
-            long steamId = (long)SteamClient.SteamId.Value;
+            DanosMatchQueuePoller.QueueType = QueueTypes.firsttoten;
 
+            long steamId = (long)SteamClient.SteamId.Value;
             while (true)
             {
                 yield return new WaitForSeconds(1f);
@@ -127,7 +129,7 @@ namespace RepoRanked.MainMenu
                 queuePage?.ClosePage(true);
                 if (status.MatchInfo.QueueType == QueueTypes.firsttoten)
                 {
-                    //FirstToTenGameManager.StartMatch(status.MatchInfo);
+                    FirstToTenGameManager.StartMatch(status.MatchInfo);
                     return true;
                 }
             }

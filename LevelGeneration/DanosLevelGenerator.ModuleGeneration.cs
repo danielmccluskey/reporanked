@@ -24,7 +24,7 @@ namespace RepoRanked.LevelGeneration
     public partial class DanosLevelGenerator
     {
 
-        private static IEnumerator ModuleGeneration(LevelGenerator instance)
+        private static void ModuleGeneration(LevelGenerator instance)
         {
             instance.waitingForSubCoroutine = true;
             instance.State = LevelState.ModuleGeneration;
@@ -80,8 +80,9 @@ namespace RepoRanked.LevelGeneration
             if (instance.ModulesNormalShuffled_1.Count == 0)
             {
                 instance.waitingForSubCoroutine = false;
-                yield break;
+                return;
             }
+
             for (int x = 0; x < instance.LevelWidth; x++)
             {
                 for (int y = 0; y < instance.LevelHeight; y++)
@@ -160,7 +161,6 @@ namespace RepoRanked.LevelGeneration
                     }
                     rotation = instance.ModuleRotations[Instance.rng.Next(0, instance.ModuleRotations.Length)];
                     instance.SpawnModule(x, y, position, rotation, Module.Type.Normal);
-                    yield return null;
                 }
             }
             instance.waitingForSubCoroutine = false;

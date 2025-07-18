@@ -31,7 +31,7 @@ namespace RepoRanked.MainMenu
                 );
                 fttPopupPage.AddElement(parent =>
                 {
-                    var lab = MenuAPI.CreateREPOLabel($"10 Level Set Seed Comp\nCheck the Discord for more info :D", parent, new Vector2(400, 260));
+                    var lab = MenuAPI.CreateREPOLabel($"First to Ten!\nUnlimited players per lobby!", parent, new Vector2(400, 260));
                     lab.labelTMP.color = Color.white;
                     lab.labelTMP.fontSize = 10;
                 });

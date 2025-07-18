@@ -106,28 +106,7 @@ namespace RepoRanked.LevelGeneration
                     break;
             }
 
-            if(result == null)
-            {
-                //choose a random module from the first list
-                if (_list1.Count > 0)
-                {
-                    result = _list1[rng.Next(_list1.Count)];
-                }
-                else if (_list2.Count > 0)
-                {
-                    result = _list2[rng.Next(_list2.Count)];
-                }
-                else if (_list3.Count > 0)
-                {
-                    result = _list3[rng.Next(_list3.Count)];
-                }
-
-                if (result == null)
-                {
-                    RepoRanked.Logger.LogError("No modules available to pick from.");
-                    return null; // No modules available
-                }
-            }
+           
 
 
             return result;

@@ -43,19 +43,37 @@ namespace RepoRanked.Patches.LevelGeneration
                     break;
 
                 case QueueTypes.monthlychallenge:
-                    if (MonthlyGameManager.Instance == null)
                     {
-                        RepoRanked.Logger.LogError("MonthlyGameManager instance is null.");
-                        return true;
+
+
+                        if (MonthlyGameManager.Instance == null)
+                        {
+                            RepoRanked.Logger.LogError("MonthlyGameManager instance is null.");
+                            return true;
+                        }
+
+                        FTTDMapData currentMapData = MonthlyGameManager.Instance.GetCurrentMapData();
+
+                        seed = currentMapData.seed.ToString();
+                        break;
                     }
 
-                    FTTDMapData currentMapData = MonthlyGameManager.Instance.GetCurrentMapData();
 
-                    seed = currentMapData.seed.ToString();
+                case QueueTypes.firsttoten:
+                    {
+                        if (FirstToTenGameManager.Instance == null)
+                        {
+                            RepoRanked.Logger.LogError("FirstToTenGameManager instance is null.");
+                            return true;
+                        }
+
+                        FTTDMapData currentMapData = FirstToTenGameManager.Instance.GetCurrentMapData();
+
+                        seed = currentMapData.seed.ToString();
 
 
-
-                    break;
+                        break;
+                    }
 
                 // Add other cases as needed
                 default:

@@ -40,5 +40,56 @@ namespace RepoRanked.EnemyGeneration
 
             RepoRanked.Logger.LogInfo("Generated difficultyAmounts.json");
         }
+
+
+        //Same for amounts per level
+        public static void LogLevelAmounts()
+        {
+            var output = new Dictionary<int, Dictionary<string, int>>();
+
+            for (int levelsCompleted = 0; levelsCompleted <= 150; levelsCompleted++)
+            {
+                RunManager.instance.levelsCompleted = levelsCompleted;
+
+                float time;
+                Dictionary<string, int> levelData = new();
+
+                if (SemiFunc.RunGetDifficultyMultiplier2() > 0f && !SemiFunc.RunIsArena())
+                {
+                    time = SemiFunc.RunGetDifficultyMultiplier2();
+
+                    levelData["totalMaxValue"] = Mathf.RoundToInt(ValuableDirector.instance.totalMaxValueCurve2.Evaluate(time));
+                    levelData["tiny"] = Mathf.RoundToInt(ValuableDirector.instance.tinyMaxAmountCurve2.Evaluate(time));
+                    levelData["small"] = Mathf.RoundToInt(ValuableDirector.instance.smallMaxAmountCurve2.Evaluate(time));
+                    levelData["medium"] = Mathf.RoundToInt(ValuableDirector.instance.mediumMaxAmountCurve2.Evaluate(time));
+                    levelData["big"] = Mathf.RoundToInt(ValuableDirector.instance.bigMaxAmountCurve2.Evaluate(time));
+                    levelData["wide"] = Mathf.RoundToInt(ValuableDirector.instance.wideMaxAmountCurve2.Evaluate(time));
+                    levelData["tall"] = Mathf.RoundToInt(ValuableDirector.instance.tallMaxAmountCurve2.Evaluate(time));
+                    levelData["veryTall"] = Mathf.RoundToInt(ValuableDirector.instance.veryTallMaxAmountCurve2.Evaluate(time));
+                }
+                else
+                {
+                    time = SemiFunc.RunGetDifficultyMultiplier1();
+
+                    levelData["totalMaxValue"] = Mathf.RoundToInt(ValuableDirector.instance.totalMaxValueCurve1.Evaluate(time));
+                    levelData["tiny"] = Mathf.RoundToInt(ValuableDirector.instance.tinyMaxAmountCurve1.Evaluate(time));
+                    levelData["small"] = Mathf.RoundToInt(ValuableDirector.instance.smallMaxAmountCurve1.Evaluate(time));
+                    levelData["medium"] = Mathf.RoundToInt(ValuableDirector.instance.mediumMaxAmountCurve1.Evaluate(time));
+                    levelData["big"] = Mathf.RoundToInt(ValuableDirector.instance.bigMaxAmountCurve1.Evaluate(time));
+                    levelData["wide"] = Mathf.RoundToInt(ValuableDirector.instance.wideMaxAmountCurve1.Evaluate(time));
+                    levelData["tall"] = Mathf.RoundToInt(ValuableDirector.instance.tallMaxAmountCurve1.Evaluate(time));
+                    levelData["veryTall"] = Mathf.RoundToInt(ValuableDirector.instance.veryTallMaxAmountCurve1.Evaluate(time));
+                }
+
+                output[levelsCompleted] = levelData;
+            }
+
+            string json = JsonConvert.SerializeObject(output, Formatting.Indented);
+            File.WriteAllText(Path.Combine(Paths.BepInExRootPath, "levelAmounts.json"), json);
+            RepoRanked.Logger.LogInfo("Generated levelAmounts.json");
+        }
+
+
+
     }
 }

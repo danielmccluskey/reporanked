@@ -15,9 +15,9 @@ namespace RepoRanked.Patches.EnemyDirectorP
     {
         static bool Prefix(EnemyDirector __instance)
         {
-            DifficultyAmountLogger.GenerateDifficultyAmountTable(__instance.amountCurve1_1, __instance.amountCurve2_1, __instance.amountCurve3_1);
-            EnemyExtractor.GenerateEnemiesFullJson(__instance);
-            EnemyExtractor.GenerateEnemiesJson(__instance);
+            //DifficultyAmountLogger.GenerateDifficultyAmountTable(__instance.amountCurve1_1, __instance.amountCurve2_1, __instance.amountCurve3_1);
+            //EnemyExtractor.GenerateEnemiesFullJson(__instance);
+            //EnemyExtractor.GenerateEnemiesJson(__instance);
             if (StatsManager.instance.teamName == "REPORanked")
             {
                 EnemySetup customGen;
@@ -54,6 +54,9 @@ namespace RepoRanked.Patches.EnemyDirectorP
                         break;
                     case QueueTypes.monthlychallenge:
                         customGen = DanosEnemyGenerator.CreateCustomEnemySetup(MonthlyGameManager.Instance.GetCurrentMapData().Enemies);
+                        break;
+                    case QueueTypes.firsttoten:
+                        customGen = DanosEnemyGenerator.CreateCustomEnemySetup(FirstToTenGameManager.Instance.GetCurrentMapData().Enemies);
                         break;
                     default:
                         RepoRanked.Logger.LogWarning("Unsupported queue type for EnemyDirector.AmountSetup.");

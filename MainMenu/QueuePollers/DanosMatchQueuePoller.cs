@@ -21,7 +21,7 @@ namespace RepoRanked.MainMenu.QueuePollers
         private REPOPopupPage? queuePage;
 
 
-        public static QueueTypes QueueType { get; private set; } = QueueTypes.ranked;
+        public static QueueTypes QueueType { get; set; } = QueueTypes.ranked;
 
         public static void Create(QueueTypes queue)
         {

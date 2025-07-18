@@ -13,6 +13,7 @@ namespace RepoRanked.LevelGeneration
     {
         public void DollarValueSetLogic(ValuableObject valuableInstance)
         {
+            Debug.Log($"[REPORanked] Setting dollar value for {valuableInstance.gameObject.name} with preset {valuableInstance.valuePreset.name}");
             if (!valuableInstance.dollarValueSet)
             {
                 if (valuableInstance.dollarValueOverride != 0)
@@ -22,7 +23,7 @@ namespace RepoRanked.LevelGeneration
                 }
                 else
                 {
-                valuableInstance.dollarValueOriginal = Mathf.Round(rng.Next((int)valuableInstance.valuePreset.valueMin, (int)valuableInstance.valuePreset.valueMax));
+                valuableInstance.dollarValueOriginal = Mathf.Round(rng2.Next((int)valuableInstance.valuePreset.valueMin, (int)valuableInstance.valuePreset.valueMax));
                     valuableInstance.dollarValueOriginal = Mathf.Round(valuableInstance.dollarValueOriginal / 100f) * 100f;
                     valuableInstance.dollarValueCurrent = valuableInstance.dollarValueOriginal;
                 }
@@ -33,7 +34,6 @@ namespace RepoRanked.LevelGeneration
 
         public static IEnumerator CustomDollarValueSet(ValuableObject instance)
         {
-            DollarValueGenerationQueue.Enqueue(instance);
 
             while (!DollarValueGenerationQueue.IsMyTurn(instance))
                 yield return null;

@@ -41,6 +41,10 @@ namespace RepoRanked.Patches.LevelGeneration
                 case QueueTypes.monthlychallenge:
                     MonthlyLogic(__instance);
                     break;
+
+                case QueueTypes.firsttoten:
+                    FTTLogic(__instance);
+                    break;
                 default:
                     RepoRanked.Logger.LogWarning("Unsupported queue type for SetRunLevel.");
                     break;
@@ -51,7 +55,53 @@ namespace RepoRanked.Patches.LevelGeneration
 
 
         }
+        private static void FTTLogic(RunManager instance)
+        {
+            List<Level> levels = instance.levels;
+            if (levels == null || levels.Count == 0)
+            {
+                RepoRanked.Logger.LogWarning("RunManager.levels is empty or null.");
+                return;
+            }
+            if (FirstToTenGameManager.Instance == null)
+            {
+                RepoRanked.Logger.LogWarning("FirstToTenGameManager.Instance is null.");
+                return;
+            }
+            if (FirstToTenGameManager.Instance.FirstToTenData == null)
+            {
+                RepoRanked.Logger.LogWarning("FirstToTenGameManager.Instance.FirstToTenData is null.");
+                return;
+            }
 
+
+
+            FTTDMapData currentMapData = FirstToTenGameManager.Instance.GetCurrentMapData();
+            if (currentMapData == null)
+            {
+                RepoRanked.Logger.LogWarning("Current map data is null.");
+                return;
+            }
+
+            string mapName = currentMapData.map;
+            if (string.IsNullOrEmpty(mapName))
+            {
+                RepoRanked.Logger.LogWarning("Map name is null or empty.");
+                return;
+            }
+
+            //Set the level
+            foreach (var level in levels)
+            {
+                if (level != null && level.ResourcePath.Contains(mapName))
+                {
+                    instance.levelCurrent = level;
+                    RepoRanked.Logger.LogInfo($"Set currentLevel to: {level.ResourcePath}");
+                    break;
+                }
+            }
+
+        }
         private static void MonthlyLogic(RunManager instance)
         {
             List<Level> levels = instance.levels;
