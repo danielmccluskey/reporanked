@@ -62,7 +62,7 @@ namespace RepoRanked.Patches
 
                 if (num >= maxInShop ||
                     (value.maxPurchase && StatsManager.instance.GetItemsUpgradesPurchasedTotal(value.itemAssetName) >= value.maxPurchaseAmount) ||
-                    (!(num3 <= __instance.totalCurrency) && rng.Next(0, 100) >= 25))
+                    (!(num3 <= __instance.totalCurrency) ))
                 {
                     continue;
                 }

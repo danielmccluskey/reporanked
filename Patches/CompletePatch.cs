@@ -46,10 +46,25 @@ namespace RepoRanked.Patches
                     monthlyInst.CompletedRound();
                     return true;
                     break;
+
+                case QueueTypes.firsttoten:
+                    FirstToTenGameManager firstToTenInst = FirstToTenGameManager.Instance;
+                    if (firstToTenInst == null)
+                    {
+                        return true;
+                    }
+
+                    if (SemiFunc.RunIsShop())
+                    {
+                        return true;
+                    }
+
+                    firstToTenInst.CompletedRound();
+                    return true;
             }           
 
 
-            return false;
+            return true;
 
 
         }

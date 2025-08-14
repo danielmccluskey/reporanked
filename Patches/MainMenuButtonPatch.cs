@@ -67,6 +67,16 @@ namespace RepoRanked.Patches
                     }
                     monthlyInst.CompleteMatch("forfeit");
                     break;
+
+                    case QueueTypes.firsttoten:
+                    FirstToTenGameManager firstToTenInst = FirstToTenGameManager.Instance;
+                    if (firstToTenInst == null)
+                    {
+                        return;
+                    }                    
+
+                    firstToTenInst.CompleteMatch("forfeit");
+                    break;
             }
         }
     }

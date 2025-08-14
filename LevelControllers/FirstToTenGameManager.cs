@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using Newtonsoft.Json;
 using RepoRanked.API;
+using RepoRanked.LevelGeneration;
 using RepoRankedApiResponseModel;
 using Steamworks;
 using System;
@@ -10,6 +11,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static UnityEngine.ParticleSystem.PlaybackState;
 
 namespace RepoRanked.LevelControllers
 {
@@ -48,13 +50,16 @@ namespace RepoRanked.LevelControllers
             LastMatchId = matchInfo.MatchId;
             matchData = matchInfo;
             localSteamId = (long)SteamClient.SteamId.Value;
-            if(matchInfo.FirstToTenData != null)
+
+            if (matchInfo.FirstToTenData != null)
             {
                 FirstToTenData = matchInfo.FirstToTenData;
             }
             FirstToTenStatusUI.CreateUI();
 
             FTTDMapData currentMapData = GetCurrentMapData();
+
+            DanosItemAttributeManager.Reset(currentMapData.seed);
 
             if (currentMapData == null)
             {
@@ -86,21 +91,24 @@ namespace RepoRanked.LevelControllers
             var progress = GetCurrentProgress();
             var extracts = GetCompletedExtractions();
             var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
             var level = GetCurrentLevel();
-            var result = await DanosAPI.SendMatchPing(matchData.MatchId, localSteamId, progress, extracts, timestamp, level);
+            FTTDMapData currentMapData = GetCurrentMapData();
+            if (currentMapData == null)
+            {
+                Debug.LogWarning("[REPORanked] Current map data is null.");
+                return;
+            }
+
+            var result = await DanosAPI.SendMatchPing(matchData.MatchId, localSteamId, progress, extracts, timestamp, level, CurrentLevelIndex, currentMapData.isShop ? 1 : 0);
             if (result == null)
             {
                 Debug.LogWarning("[REPORanked] Failed to ping match.");
                 return;
             }
 
-            FTTDMapData currentMapData = GetCurrentMapData();
 
-            if (currentMapData == null)
-            {
-                Debug.LogWarning("[REPORanked] Current map data is null.");
-                return;
-            }
+           
 
             if(result.FirstToTenData != null)
             {
@@ -192,6 +200,8 @@ namespace RepoRanked.LevelControllers
 
         public void CompletedRound()
         {
+            Debug.LogWarning("[REPORanked] Completed Round Called.");
+
             CurrentLevelIndex++;
 
             if(IsLastShop())
@@ -211,7 +221,10 @@ namespace RepoRanked.LevelControllers
                 return;
             }
 
-            
+            int seed = currentMapData.seed;
+            DanosItemAttributeManager.Reset(seed);
+
+
         }
     }
 }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using static RunManager;
 
 namespace RepoRanked.Patches.LevelGeneration
 {
@@ -21,13 +22,35 @@ namespace RepoRanked.Patches.LevelGeneration
     //        }
     //    }
     //}
+    [HarmonyPatch]
+    public class RunManagerPatch_ChangeLevel
+    {
+        [HarmonyPatch(typeof(RunManager), "ChangeLevel")]
+        public static void Postfix(RunManager __instance, bool _completedLevel, bool _levelFailed, ChangeLevelType _changeLevelType)
+        {
+            if (_levelFailed && __instance.levelCurrent != __instance.levelLobby && __instance.levelCurrent != __instance.levelShop)
+            {
+                if (__instance.levelCurrent == __instance.levelArena)
+                {
+                    if (FirstToTenGameManager.Instance != null)
+                    {
+                        FirstToTenGameManager.Instance.CompleteMatch("dead");
+                    }
+
+                }
+            }
+        }
+    }
+
+
+
 
     [HarmonyPatch(typeof(RunManager), "SetRunLevel")]
     public class RunManagerPatch_SetRunLevel
     {
         static void Postfix(RunManager __instance)
         {
-            
+
             Debug.Log($"RunManagerPatch_SetRunLevel: DanosMatchQueuePoller.QueueType = {DanosMatchQueuePoller.QueueType}");
 
             switch (DanosMatchQueuePoller.QueueType)

@@ -4,6 +4,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using RepoRanked.MainMenu;
 using RepoRankedApiResponseModel;
+using System.Linq;
 
 namespace RepoRanked.LevelControllers
 {
@@ -81,7 +82,7 @@ namespace RepoRanked.LevelControllers
             if (playersText == null || data == null) return;
 
             var sb = new System.Text.StringBuilder();
-            foreach (var player in data)
+            foreach (var player in data.OrderByDescending(p => p.Level))
             {
                 if (player.OpponentProgress == 0 && player.OpponentExtractions == 0)
                 {
@@ -92,7 +93,15 @@ namespace RepoRanked.LevelControllers
 
 
                 string playerName = PlayersNames.ContainsKey(player.OpponentSteamID) ? PlayersNames[player.OpponentSteamID] : "Unknown Player";
-                sb.AppendLine($"{playerName} - {player.Level} - {player.OpponentProgress}/{player.OpponentExtractions}");
+                if(player.InShop == 1)
+                {
+                    sb.AppendLine($"{playerName} - {player.Level} - In Shop");
+
+                }
+                else
+                {
+                    sb.AppendLine($"{playerName} - {player.Level} - {player.OpponentProgress}/{player.OpponentExtractions}");
+                }
             }
 
             playersText.text = sb.ToString();

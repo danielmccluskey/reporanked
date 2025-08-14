@@ -13,7 +13,6 @@ namespace RepoRanked.LevelGeneration
     {
         public void DollarValueSetLogic(ValuableObject valuableInstance)
         {
-            Debug.Log($"[REPORanked] Setting dollar value for {valuableInstance.gameObject.name} with preset {valuableInstance.valuePreset.name}");
             if (!valuableInstance.dollarValueSet)
             {
                 if (valuableInstance.dollarValueOverride != 0)
