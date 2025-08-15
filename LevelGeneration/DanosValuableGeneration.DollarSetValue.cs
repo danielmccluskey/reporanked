@@ -13,8 +13,10 @@ namespace RepoRanked.LevelGeneration
     {
         public void DollarValueSetLogic(ValuableObject valuableInstance)
         {
+
             if (!valuableInstance.dollarValueSet)
             {
+
                 if (valuableInstance.dollarValueOverride != 0)
                 {
                     valuableInstance.dollarValueOriginal = valuableInstance.dollarValueOverride;
@@ -22,11 +24,16 @@ namespace RepoRanked.LevelGeneration
                 }
                 else
                 {
-                valuableInstance.dollarValueOriginal = Mathf.Round(rng2.Next((int)valuableInstance.valuePreset.valueMin, (int)valuableInstance.valuePreset.valueMax));
+                    valuableInstance.dollarValueOriginal = Mathf.Round(rng2.Next((int)valuableInstance.valuePreset.valueMin, (int)valuableInstance.valuePreset.valueMax));
                     valuableInstance.dollarValueOriginal = Mathf.Round(valuableInstance.dollarValueOriginal / 100f) * 100f;
                     valuableInstance.dollarValueCurrent = valuableInstance.dollarValueOriginal;
                 }
                 valuableInstance.dollarValueSet = true;
+                //Debug.Log($"Dollar value set for {valuableInstance.gameObject.name}: {valuableInstance.dollarValueCurrent}");
+            }
+            else
+            {
+                //Debug.LogWarning($"Dollar value for {valuableInstance.gameObject.name} is already set. Current value: {valuableInstance.dollarValueCurrent}");
             }
 
         }
@@ -34,28 +41,18 @@ namespace RepoRanked.LevelGeneration
         public static IEnumerator CustomDollarValueSet(ValuableObject instance)
         {
 
-            while (!DollarValueGenerationQueue.IsMyTurn(instance))
-                yield return null;
+
 
             while (LevelGenerator.Instance.State <= LevelGenerator.LevelState.Valuable)
                 yield return null;
 
-            if (!SemiFunc.IsMultiplayer())
-            {
-                instance.DollarValueSetLogic();
-            }
-            else if (SemiFunc.IsMasterClient())
-            {
-                instance.DollarValueSetLogic();
-                instance.photonView.RPC("DollarValueSetRPC", RpcTarget.Others, instance.dollarValueCurrent);
-            }
+
 
             if (SemiFunc.IsMasterClientOrSingleplayer())
             {
                 RoundDirector.instance.haulGoalMax += (int)instance.dollarValueCurrent;
             }
 
-            DollarValueGenerationQueue.Done(instance);
         }
 
     }

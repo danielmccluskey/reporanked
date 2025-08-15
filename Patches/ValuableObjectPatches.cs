@@ -1,13 +1,14 @@
 ﻿using HarmonyLib;
+using Photon.Pun;
+using RepoRanked.EnemyGeneration;
 using RepoRanked.LevelControllers;
 using RepoRanked.LevelGeneration;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Unity.VisualScripting.Dependencies.NCalc;
-using UnityEngine.AI;
 using UnityEngine;
-using RepoRanked.EnemyGeneration;
+using UnityEngine.AI;
 
 namespace RepoRanked.Patches
 {
@@ -37,7 +38,7 @@ namespace RepoRanked.Patches
 
         static bool QueueObjectPrefix(ValuableObject __instance)
         {
-            DollarValueGenerationQueue.Enqueue(__instance);
+            //DollarValueGenerationQueue.Enqueue(__instance);
 
             __instance.physGrabObject = __instance.GetComponent<PhysGrabObject>();
             __instance.roomVolumeCheck = __instance.GetComponent<RoomVolumeCheck>();
@@ -46,6 +47,18 @@ namespace RepoRanked.Patches
             {
                 Debug.LogError(__instance.gameObject.name + " has a NavMeshObstacle component. Please remove it.");
             }
+
+            if (!SemiFunc.IsMultiplayer())
+            {
+                DanosValuableGeneration.Instance.DollarValueSetLogic(__instance);
+            }
+            else if (SemiFunc.IsMasterClient())
+            {
+                DanosValuableGeneration.Instance.DollarValueSetLogic(__instance);
+                __instance.photonView.RPC("DollarValueSetRPC", RpcTarget.Others, __instance.dollarValueCurrent);
+            }
+
+
             __instance.StartCoroutine(DanosValuableGeneration.CustomDollarValueSet(__instance));
             __instance.rigidBodyMass = __instance.physAttributePreset.mass;
             __instance.rb = __instance.GetComponent<Rigidbody>();

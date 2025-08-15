@@ -47,6 +47,8 @@ namespace RepoRanked.LevelControllers
         private void BeginMatch(MatchmakingStatusResponse matchInfo)
         {
             CurrentLevelIndex = 0; 
+
+
             LastMatchId = matchInfo.MatchId;
             matchData = matchInfo;
             localSteamId = (long)SteamClient.SteamId.Value;

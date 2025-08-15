@@ -2,6 +2,7 @@
 using MenuLib.MonoBehaviors;
 using RepoRanked.API;
 using RepoRanked.LevelControllers;
+using RepoRanked.MainMenu.QueuePollers;
 using RepoRanked.Mods;
 using Steamworks;
 using System;
@@ -25,6 +26,17 @@ namespace RepoRanked.MainMenu
                             isProcessing = true;
 
                             var matchId = RankedGameManager.LastMatchId;
+                            if(matchId == -1)
+                            {
+                                matchId = FirstToTenGameManager.LastMatchId;
+
+                                if (matchId == -1)
+                                {
+                                    Debug.LogError("No match ID available for last match results.");
+                                    isProcessing = false;
+                                    return;
+                                }
+                            }
                             var response = await DanosAPI.GetMatchResults(matchId);
                             if (response != null)
                             {
@@ -63,6 +75,21 @@ namespace RepoRanked.MainMenu
                                         y -= 30;
                                     });
                                 }
+
+
+                                if(FirstToTenGameManager.LastMatchId != -1 && DanosMatchQueuePoller.QueueType == RepoRankedApiResponseModel.QueueTypes.firsttoten)
+                                {
+                                    var splitStatsUrl = $"https://reporanked.splitstats.io/lobby/results/{FirstToTenGameManager.LastMatchId}";
+                                    popup.AddElement(scrollParent =>
+                                    {
+                                        MenuAPI.CreateREPOButton("View More", () =>
+                                        {
+                                            Application.OpenURL(splitStatsUrl);
+                                        }, scrollParent, new Vector2(400, y - 70));
+                                    });
+                                }
+
+
 
                                 popup.AddElement(scrollParent =>
                                 {

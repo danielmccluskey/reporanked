@@ -12,12 +12,12 @@ namespace RepoRanked.LevelGeneration
     public partial class DanosValuableGeneration
     {
         public static DanosValuableGeneration? Instance { get; private set; }
-        private System.Random rng2;
         private System.Random rng;
+        private System.Random rng2;
         private DanosValuableGeneration(int seed)
         {
-            rng2 = new System.Random(seed); 
             rng = new System.Random(seed);
+            rng2 = new System.Random(seed);
         }
 
         public static void Create(int seed)
@@ -86,6 +86,26 @@ namespace RepoRanked.LevelGeneration
                 instance.veryTallValuables.AddRange(valuablePreset.veryTall);
             }
             List<ValuableVolume> list = UnityEngine.Object.FindObjectsOfType<ValuableVolume>(includeInactive: false).ToList();
+
+            Debug.Log($"Found {list.Count} valuable volumes in the scene.");
+
+            //remove inactive volumes
+            list.RemoveAll(volume => !volume.gameObject.activeInHierarchy);
+
+            Debug.Log($"After removing inactive volumes, {list.Count} valuable volumes remain.");
+
+
+
+            ////List the id of each volume to test the order
+            //for (int i = 0; i < list.Count; i++)
+            //{
+            //    Debug.Log($"Volume {i}: {list[i].gameObject.name} {list[i].gameObject.GetInstanceID()} (Type: {list[i].VolumeType})");
+            //}
+
+
+
+
+
             instance.tinyVolumes = list.FindAll((ValuableVolume x) => x.VolumeType == ValuableVolume.Type.Tiny);
             instance.tinyVolumes.ShuffleWithRng(rng);
             instance.smallVolumes = list.FindAll((ValuableVolume x) => x.VolumeType == ValuableVolume.Type.Small);
@@ -155,7 +175,6 @@ namespace RepoRanked.LevelGeneration
                 GameObject valuable = _valuables[num2][Range(0, _valuables[num2].Count)];
                 instance.Spawn(valuable, volume, _path[num2]);
                 _volumeIndex[num2]++;
-                yield return null;
             }
             if (instance.valuableTargetAmount < instance.totalMaxAmount && (bool)DebugComputerCheck.instance && (!DebugComputerCheck.instance.enabled || !DebugComputerCheck.instance.LevelDebug || !DebugComputerCheck.instance.ModuleOverrideActive || !DebugComputerCheck.instance.ModuleOverride))
             {

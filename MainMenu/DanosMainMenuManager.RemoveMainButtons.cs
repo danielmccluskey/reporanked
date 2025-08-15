@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using static Photon.Pun.UtilityScripts.TabViewManager;
 
 namespace RepoRanked.MainMenu
 {
@@ -42,6 +43,9 @@ namespace RepoRanked.MainMenu
                         child.GetComponent<MenuButton>().enabled = false;
                         child.GetComponent<MenuSelectableElement>().enabled = false;
                         child.transform.GetChild(0).GetComponent<TMP_Text>().color = new Color(1, 1, 1, 0.1f);
+
+                        fontAsset = child.transform.GetChild(0).GetComponent<TMP_Text>().font;
+
                         if (child.name == "Menu Button - singleplayer" && RankedGameManager.LastMatchId != -1)
                             Destroy(child.gameObject);
                         break;

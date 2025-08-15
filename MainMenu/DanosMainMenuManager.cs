@@ -63,7 +63,7 @@ namespace RepoRanked.MainMenu
                 var rankedbutton = GetQueueSelectorButton(parent);
                 var discordButton = GetDiscordButton(parent);
 
-                if (RankedGameManager.LastMatchId != -1)
+                if (RankedGameManager.LastMatchId != -1 || FirstToTenGameManager.LastMatchId != -1)
                 {
                     var lastMatchButton = GetLastMatchButton(parent);
                     _ = RunLastMatchCheckAsync();

@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using RepoRanked.MainMenu;
 using RepoRankedApiResponseModel;
+using System.Collections.Generic;
 using System.Linq;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace RepoRanked.LevelControllers
 {
@@ -37,6 +38,14 @@ namespace RepoRanked.LevelControllers
             canvas.sortingOrder = 9999;
             DontDestroyOnLoad(canvasObj);
 
+
+
+            var scaler = canvasObj.AddComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1920, 1080); // pick your design res
+            scaler.matchWidthOrHeight = 1f; // 0 = width, 1 = height
+
+
             var uiObj = new GameObject("FirstToTenStatusUI", typeof(RectTransform));
             uiObj.transform.SetParent(canvas.transform);
             var rect = uiObj.GetComponent<RectTransform>();
@@ -55,14 +64,20 @@ namespace RepoRanked.LevelControllers
             var playersObj = new GameObject("PlayersText", typeof(TextMeshProUGUI));
             playersObj.transform.SetParent(parent);
             playersText = playersObj.GetComponent<TextMeshProUGUI>();
-            playersText.fontSize = 14;
+            playersText.enableAutoSizing = true;
+            playersText.fontSizeMin = 12f;
+            playersText.fontSizeMax = 36f;
+
             playersText.alignment = TextAlignmentOptions.TopLeft;
             playersText.enableWordWrapping = true;
-            playersText.rectTransform.pivot = new Vector2(0, 1);
-            playersText.rectTransform.anchorMin = new Vector2(0, 1);
-            playersText.rectTransform.anchorMax = new Vector2(0, 1);
-            playersText.rectTransform.anchoredPosition = new Vector2(10, -10);
-            playersText.rectTransform.sizeDelta = new Vector2(480, 480);
+
+
+            var rt = playersText.rectTransform;
+            rt.pivot = new Vector2(0, 1);
+            rt.anchorMin = new Vector2(0, 1);
+            rt.anchorMax = new Vector2(0, 1);
+            rt.anchoredPosition = new Vector2(10, -10);
+            rt.sizeDelta = new Vector2(480, 480);
 
             if (DanosMainMenuManager.fontAsset != null)
             {

@@ -41,5 +41,14 @@ namespace RepoRanked.LevelGeneration
                 }
             }
         }
+
+        public static void Reset()
+        {
+            lock (queue)
+            {
+                queue.Clear();
+                current = null;
+            }
+        }
     }
 }

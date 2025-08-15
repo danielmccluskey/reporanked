@@ -92,7 +92,7 @@ namespace RepoRanked.Patches.LevelGeneration
                 RepoRanked.Logger.LogError($"Failed to parse seed '{seed}' as int.");
                 return true;
             }
-
+            DollarValueGenerationQueue.Reset();
             DanosLevelGenerator.Create(seedInt);
             DanosValuableGeneration.Create(seedInt);
             UnityEngine.Random.InitState(seedInt); // catch-all for anything else

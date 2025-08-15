@@ -61,8 +61,9 @@ namespace RepoRanked.Patches
                 int maxInShop = value.maxAmountInShop;
 
                 if (num >= maxInShop ||
-                    (value.maxPurchase && StatsManager.instance.GetItemsUpgradesPurchasedTotal(value.itemAssetName) >= value.maxPurchaseAmount) ||
-                    (!(num3 <= __instance.totalCurrency) ))
+                    (value.maxPurchase && StatsManager.instance.GetItemsUpgradesPurchasedTotal(value.itemAssetName) >= value.maxPurchaseAmount) //||
+                                                                                                                                                //(!(num3 <= __instance.totalCurrency) && rng.Next(0, 100) >= 25)
+                    )
                 {
                     continue;
                 }
